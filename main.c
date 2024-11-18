@@ -7,8 +7,41 @@ void init_game(t_game *game)
     game->win_w = 640;
     game->win_h = 480;
     game->mlx = mlx_init(game->win_w, game->win_h, "cub3d", true);
+    game->res_x = 100;
+    game->res_y = 100;
+    game->img = NULL;
     
 }
+
+uint32_t random_color(uint32_t r, uint32_t g, uint32_t b, uint32_t a)
+{
+    return (r << 24 | g << 16 | b << 8 | a);
+}
+
+void randomizer(void *params)
+{
+    uint32_t i;
+    uint32_t j;
+    uint32_t color;
+    t_game *game = (t_game *)params;
+
+    i = 0;
+    while (i < game->img->width)
+    {
+        j = 0;
+        while (j < game->img->height)
+        {
+            color = random_color(rand() % 255, rand() % 255, rand() % 255, 255);
+            mlx_put_pixel(game->img, i, j, color);
+            j++;
+        }
+        i++;
+    }
+
+
+}
+
+
 
 void key_hooks(void *params)
 {
@@ -58,8 +91,26 @@ int main (int argc, char **argv)
         return (1);
     }
 
+    
+
     t_game game;
     init_game(&game);
+
+
+    if (!(game.img = mlx_new_image(game.mlx, 100, 100)))
+    {
+        printf("Error\nFailed to create image\n");
+        return (1);
+    }
+
+    if (mlx_image_to_window(game.mlx, game.img, 0, 0) == false)
+    {
+        printf("Error\nFailed to draw image\n");
+        return (1);
+    }
+
+    
+    mlx_loop_hook(game.mlx, &randomizer, &game);
     mlx_loop_hook(game.mlx, &key_hooks, &game);
     mlx_loop(game.mlx);
     mlx_terminate(game.mlx);

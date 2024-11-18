@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/11/18 16:37:30 by vovashko      ########   odam.nl         */
+/*   Updated: 2024/11/18 16:59:51 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_game
     int    win_h;
     int    res_x;
     int    res_y;
-    void   *img;
+    mlx_image_t   *img;
     
 } t_game;
 
