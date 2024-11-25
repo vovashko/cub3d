@@ -13,11 +13,11 @@
       "cwd": "${workspaceFolder}",
       "environment": [],
       "externalConsole": false,
-      "MIMode": "lldb", // Use gdb or lldb depending on your setup
+      "MIMode": "gdb", // Use gdb or lldb depending on your setup
       "setupCommands": [
         {
-            "description": "Enable pretty-printing for lldb",
-            "text": "settings set target.debug-file-search-paths ${workspaceFolder}",
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
             "ignoreFailures": true
         }
       ],

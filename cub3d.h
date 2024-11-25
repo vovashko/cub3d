@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/11/25 15:00:26 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/25 17:39:58 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,40 @@
 # include <stdio.h>
 # include <stdbool.h>
 # include <stdlib.h>
+# include <math.h>
+# include <unistd.h>
+# include <fcntl.h>
 # include "MLX42/include/MLX42/MLX42.h"
+# include "gnl/get_next_line.h"
+
 
 #define PI 3.14159265359
 #define WIDTH 800
 #define HEIGHT 600
 
+typedef struct s_ray
+{
+	int r; 	// ray number
+	int mx; // map x
+	int my; // map y
+	int mp; // map position
+	int dof; // direction of field
+	float rx;   // ray x
+	float ry;	// ray y
+	float ra;   // ray angle
+	float xo;	// x offset
+	float yo;	// y offset
+} t_ray;
+
 
 typedef struct s_player
 {
 	mlx_image_t   *player_img;
-	int x;
-	int y;
-	int dir;
+	float x;
+	float y;
+	float dx;
+	float dy;
+	float dir;
 } t_player;
 
 typedef struct s_game
@@ -36,11 +57,14 @@ typedef struct s_game
     void   *mlx;
     int*   map;
 	mlx_image_t *background;
+	mlx_image_t *wall;
 	t_player *player;
+	t_ray *ray;
 } t_game;
 
 
-void init_game(t_game *game);
+void init_game(t_game *game, char *map_file);
+void init_map(char *file, t_game *game);
 bool check_file_format(char *file);
 
 #endif

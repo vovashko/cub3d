@@ -1,7 +1,8 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-SRCS = main.c init.c map_file_check.c
-OBJS = $(SRCS:.c=.o)
+SRCS = main.c init.c map_file_check.c 
+SRCS_GNL = gnl/get_next_line.c gnl/get_next_line_utils.c
+OBJS = $(SRCS:.c=.o) $(SRCS_GNL:.c=.o)
 NAME = cub3d
 MLX_FLAGS_MAC = -framework OpenGL -framework IOkit -framework Cocoa -lglfw -L"/opt/homebrew/Cellar/glfw/3.4/lib" -I"/opt/homebrew/Cellar/glfw/3.4/include"
 MLX_LIB = MLX42/build/libmlx42.a
