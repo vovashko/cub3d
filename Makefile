@@ -1,15 +1,20 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-SRCS = main.c
+SRCS = main.c init.c map_file_check.c
 OBJS = $(SRCS:.c=.o)
 NAME = cub3d
-MLX_FLAGS = -framework OpenGL -framework IOkit -framework Cocoa 
+MLX_FLAGS_MAC = -framework OpenGL -framework IOkit -framework Cocoa -lglfw -L"/opt/homebrew/Cellar/glfw/3.4/lib" -I"/opt/homebrew/Cellar/glfw/3.4/include"
 MLX_LIB = MLX42/build/libmlx42.a
+MLX_FLAGS_LINUX = -ldl -lglfw -pthread -lm
 
 all: $(NAME)
 
 $(NAME): $(OBJS) $(MLX_LIB)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(MLX_FLAGS) $(MLX_LIB) -lglfw -L"/opt/homebrew/Cellar/glfw/3.4/lib" -I"/opt/homebrew/Cellar/glfw/3.4/include"
+ifeq ($(shell uname), Darwin)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(MLX_FLAGS_MAC) $(MLX_LIB)
+else
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(MLX_FLAGS_LINUX) $(MLX_LIB)
+endif
 
 $(MLX_LIB):
 	cd MLX42 && cmake -B build && cmake --build build -j4
