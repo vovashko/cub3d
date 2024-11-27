@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/11/27 16:06:49 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/27 16:53:28 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,32 @@
 
 
 #define PI 3.14159265359
+#define PI_2 1.57079632679  
+#define FOV 60
+#define TILE_SIZE 64
+#define MAP_WIDTH 10
+#define MAP_HEIGHT 10
+#define MAP_SIZE 100
+#define PLAYER_SIZE 50
+#define ONE_DEGREE 0.01745329251
+
 #define WIDTH 800
 #define HEIGHT 600
 #define TEST_MODE 0
+#define MAX_DOF 8
 
 typedef struct s_ray
 {
-	int r; 	// ray number
-	int mx; // map x
-	int my; // map y
-	int mp; // map position
+	int ray_num; 	// ray number
+	int map_x; // map x
+	int map_y; // map y
+	int map_pos; // map position
 	int dof; // direction of field
-	float rx;   // ray x
-	float ry;	// ray y
-	float ra;   // ray angle
-	float xo;	// x offset
-	float yo;	// y offset
+	float x;   // ray x
+	float y;	// ray y
+	float dir;   // ray angle
+	float x_offset;	// x offset
+	float y_offset;	// y offset
 } t_ray;
 
 

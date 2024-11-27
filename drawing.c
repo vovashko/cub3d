@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:06:20 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/27 16:06:36 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/27 17:25:14 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@ void update_player(void *params)
 		printf("Error\nFailed to draw image\n");
 		exit(1);
 	}
-	printf("Player x: %f\n", game->player->x);
-	printf("Player y: %f\n", game->player->y);
-
 }
 
 void draw_map(t_game *game)

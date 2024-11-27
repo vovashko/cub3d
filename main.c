@@ -36,22 +36,11 @@ int main (int argc, char **argv)
 	(void)argv;
 	init_game(game, "map.cub");
 	#endif
-	if (game->player->player_img == NULL)
-    {
-        printf("Error\nplayer_img is NULL\n");
-        return (1);
-    }
-
-	if (mlx_image_to_window(game->mlx, game->background, 0, 0) == -1)
-	{
-		printf("Error\nFailed to draw image\n");
-		return (1);
-	}
 	draw_map(game);
 
     mlx_loop_hook(game->mlx, key_hooks, game);
 	mlx_loop_hook(game->mlx, update_player, game);
     mlx_loop(game->mlx);
     mlx_terminate(game->mlx);
-    
+    return (0);
 }

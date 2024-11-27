@@ -6,110 +6,131 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 17:23:51 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/25 17:39:49 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/27 18:10:30 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void raycaster(t_game *game)
+void raycaster(t_player *player)
 {
-	check_horizontal(game->ray, game);
-	check_vertical(game->ray, game);
+	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
+	ray->ray_num = 1;
+	ray->x = player->x;
+	ray->y = player->y;
+	ray->dir = player->dir;
+	ray->x_offset = 0;
+	ray->y_offset = 0;
+	
+	check_horizontal(ray, player);
+	check_vertical(ray, player);
+	float distance = shortest_distance(ray, player);
 }
 
-void check_horizontal(t_ray *ray, t_game *game)
+void check_horizontal(t_ray *ray, t_player *player)
 {
-	ray->ra = game->player->dir;
-	for (r = 0,; r < 1; r++)
-	{
 		ray->dof = 0;
-		float aTan = -1 / tan(ray->ra);
-		if (ray->ra > PI) // ray facing down
+		float aTan = -1 / tan(ray->dir);
+		if (ray->dir > PI) // ray facing down
 		{
-			ray->ry = (((int)game->player->y >> 6) << 6) - 0.0001;
-			ray->rx = (game->player->y - ray->ry) * aTan + game->player->x;
-			ray->yo = -64;
-			ray->xo = -ray->yo * aTan;
+			ray->y = (((int)player->y >> 6) << 6) - 0.0001;
+			ray->x = (player->y - ray->y) * aTan + player->x;
+			ray->y_offset = -64;
+			ray->x_offset = -ray->y_offset * aTan;
 		}
-		if (ray->ra < PI) // ray facing up
+		else if (ray->dir < PI) // ray facing up
 		{
-			ray->ry = (((int)game->player->y >> 6) << 6) + 64;
-			ray->rx = (game->player->y - ray->ry) * aTan + game->player->x;
-			ray->yo = 64;
-			ray->xo = -ray->yo * aTan;
+			ray->y = (((int)player->y >> 6) << 6) + 64;
+			ray->x = (player->y - ray->y) * aTan + player->x;
+			ray->y_offset = 64;
+			ray->x_offset = -ray->y_offset * aTan;
 		}
-		if (ray->ra == 0 || ray->ra == PI) // ray facing right or left
+		else // ray facing right or left
 		{
-			ray->rx = game->player->x;
-			ray->ry = game->player->y;
-			ray->dof = 8;
+			ray->x = player->x;
+			ray->y = player->y;
+			ray->dof = MAX_DOF;
 		}
-		while (ray->dof < 8)
+		while (ray->dof < MAX_DOF)
 		{
-			ray->mx = (int)(ray->rx) >> 6;
-			ray->my = (int)(ray->ry) >> 6;
-			ray->mp = ray->my * 10 + ray->mx;
-			if (ray->mp > 0 && ray->mp < 100 && game->map[ray->mp] == 1)
-			{
-				ray->hx = ray->rx;
-				ray->hy = ray->ry;
-				ray->dof = 8;
-			}
+			ray->map_x = (int)(ray->x) >> 6;
+			ray->map_y = (int)(ray->y) >> 6;
+			ray->map_pos = ray->map_y * MAP_WIDTH  + ray->map_x; // instead of 10, use the actual map width
+			if (ray->map_pos > 0 && map[ray->map_pos] == 1) // instead of 100, use the actual map size
+				ray->dof = MAX_DOF;
 			else
 			{
-				ray->rx += ray->xo;
-				ray->ry += ray->yo;
+				ray->x += ray->x_offset;
+				ray->y += ray->y_offset;
 				ray->dof += 1;
 			}
 		}
-	}	
 }
 
-void check_vertical(t_game *game)
+void check_vertical(t_player *player)
 {
-	ray->ra = game->player->dir;
-	for (r = 0,; r < 1; r++)
-	{
 		ray->dof = 0;
-		float nTan = -tan(ray->ra);
-		if (ray->ra > PI / 2 && ray->ra < 1.5 * PI) // ray facing left
+		float nTan = -tan(ray->dir);
+		if (ray->dir > PI_2 && ray->dir < (PI + PI_2)) // ray facing left
 		{
-			ray->rx = (((int)game->player->x >> 6) << 6) - 0.0001;
-			ray->ry = (game->player->x - ray->rx) * nTan + game->player->y;
-			ray->xo = -64;
-			ray->yo = -ray->xo * nTan;
+			ray->x = (((int)player->x >> 6) << 6) - 0.0001;
+			ray->y = (player->x - ray->x) * nTan + player->y;
+			ray->x_offset = -64;
+			ray->y_offset = -ray->x_offset * nTan;
 		}
-		if (ray->ra < PI / 2 || ray->ra > 1.5 * PI) // ray facing right
+		else if (ray->dir < PI_2 || ray->dir > (PI + PI_2)) // ray facing right
 		{
-			ray->rx = (((int)game->player->x >> 6) << 6) + 64;
-			ray->ry = (game->player->x - ray->rx) * nTan + game->player->y;
-			ray->xo = 64;
-			ray->yo = -ray->xo * nTan;
+			ray->x = (((int)player->x >> 6) << 6) + 64;
+			ray->y = (player->x - ray->x) * nTan + player->y;
+			ray->x_offset = 64;
+			ray->y_offset = -ray->x_offset * nTan;
 		}
-		if (ray->ra == 0 || ray->ra == PI) // ray facing right or left
+		else  // ray facing up or dwon
 		{
-			ray->rx = game->player->x;
-			ray->ry = game->player->y;
-			ray->dof = 8;
+			ray->x = player->x;
+			ray->y = player->y;
+			ray->dof = MAX_DOF;
 		}
-		while (ray->dof < 8)
+		while (ray->dof < MAX_DOF)
 		{
-			ray->mx = (int)(ray->rx) >> 6;
-			ray->my = (int)(ray->ry) >> 6;
-			ray->mp = ray->my * 10 + ray->mx;
-			if (ray->mp > 0 && ray->mp < 100 && game->map[ray->mp] == 1)
-			{
-				ray->hx = ray->rx;
-				ray->hy = ray->ry;
-				ray->dof = 8;
-			}
+			ray->map_x = (int)(ray->x) >> 6;
+			ray->map_y = (int)(ray->y) >> 6;
+			ray->map_pos = ray->map_y * MAP_HEIGHT + ray->map_x; // instead of 10, use the actual map height
+			if (ray->map_pos > 0 && ray->map_pos < 100 && map[ray->map_pos] == 1) // instead of 100, use the actual map size
+				ray->dof = MAX_DOF;
 			else
 			{
-				ray->rx += ray->xo;
-				ray->ry += ray->yo;
+				ray->x += ray->x_offset;
+				ray->y += ray->y_offset;
 				ray->dof += 1;
 			}
-		}
-	}	
+		}	
 }
+
+float shortest_distance(t_ray *ray, t_player *player)
+{
+	float h_dist = sqrt((ray->x - player->x) * (ray->x - player->x) + (ray->y - player->y) * (ray->y - player->y));
+	float v_dist = sqrt((ray->rx - player->x) * (ray->rx - player->x) + (ray->ry - player->y) * (ray->ry - player->y));
+	if (h_dist < v_dist)
+		return (h_dist);
+	else
+		return (v_dist);
+}
+
+void draw_walls(t_player *player, t_ray *ray)
+{
+	float distance = shortest_distance(ray, player);
+	angle = player->dir - ray->dir;
+	if (angle < 0)
+		angle += 2 * PI;
+	if (angle > 2 * PI)
+		angle -= 2 * PI;
+	distance *= cos(angle);
+	float wall_height = (TILE_SIZE / distance) * 277;
+	if wall_height > 277
+		wall_height = 277;
+	float wall_strip_x = ray->ray_num * TILE_SIZE;
+	float wall_strip_y = (HEIGHT - wall_height) / 2;
+	
+}
+
