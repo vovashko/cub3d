@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/25 17:17:13 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/27 16:01:33 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ void init_game(t_game *game, char *map_file)
         printf("Error\nFailed to create player image\n");
         exit(1);
     }
+	#if TEST_MODE == 1
+	game->player->player_img->enabled = false;
+	#endif 
 
 	game->wall = mlx_texture_to_image(game->mlx, mlx_load_png("textures/west.png"));
 	if (mlx_resize_image(game->wall, 50, 50)== false)
@@ -42,13 +45,35 @@ void init_game(t_game *game, char *map_file)
 		printf("Error\nFailed to resize image\n");
 		exit(1);
 	}
-	game->player->x = 5;
-	game->player->y = 5;
+	game->player->x = 5 * 50;
+	game->player->y = 5 * 50;
 	game->player->dir = 0;
 	game->player->dx = cos(game->player->dir) * 5;
 	game->player->dy = sin(game->player->dir) * 5;
+	game->player->fov = PI / 3;
 	game->map = (int *)malloc(sizeof(int) * 100);
+	#if TEST_MODE == 1
 	init_map(map_file, game);
+	#endif
+	#if TEST_MODE == 0
+	int map[100] = {
+		1,1,1,1,1,1,1,1,1,1,
+		1,0,0,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,0,0,1,
+		1,1,1,1,1,1,1,1,1,1,
+	};
+	for (int i = 0; i < 100; i++)
+	{
+		game->map[i] = map[i];
+	};
+	(void)map_file;
+	#endif
 }
 	
 void init_map(char *file, t_game *game)

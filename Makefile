@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-SRCS = main.c init.c map_file_check.c 
+SRCS = main.c init.c map_file_check.c controls.c drawing.c
 SRCS_GNL = gnl/get_next_line.c gnl/get_next_line_utils.c
 OBJS = $(SRCS:.c=.o) $(SRCS_GNL:.c=.o)
 NAME = cub3d

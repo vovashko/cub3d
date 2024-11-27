@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/11/25 17:39:58 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/27 16:06:49 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #define PI 3.14159265359
 #define WIDTH 800
 #define HEIGHT 600
+#define TEST_MODE 0
 
 typedef struct s_ray
 {
@@ -50,6 +51,7 @@ typedef struct s_player
 	float dx;
 	float dy;
 	float dir;
+	float fov;
 } t_player;
 
 typedef struct s_game
@@ -66,5 +68,8 @@ typedef struct s_game
 void init_game(t_game *game, char *map_file);
 void init_map(char *file, t_game *game);
 bool check_file_format(char *file);
+void key_hooks(void *params);
+void update_player(void *params);
+void draw_map(t_game *game);
 
 #endif
