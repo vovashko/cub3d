@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:03:16 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/27 16:05:29 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/27 17:23:44 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,15 @@ void key_hooks(void *params)
 		game->player->y -= game->player->dy;
 		game->player->x -= game->player->dx;
 	}
-    if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-	{
-		game->player->x -= 5;
-		game->player->y += 5;
-	}
     if (mlx_is_key_down(game->mlx, MLX_KEY_D))
 	{
-		game->player->x += game->player->dx;
-		game->player->y -= game->player->dy;
+		game->player->x -= game->player->dy;
+		game->player->y += game->player->dx;
+	}
+    if (mlx_is_key_down(game->mlx, MLX_KEY_A))
+	{
+		game->player->x += game->player->dy;
+		game->player->y -= game->player->dx;
 	}
 	turn_controls(game);
 }
