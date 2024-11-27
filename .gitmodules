@@ -3,4 +3,4 @@
 	url = https://github.com/codam-coding-college/MLX42.git
 [submodule "gnl"]
 	path = gnl
-	url = git@vogsphere-v2.codam.nl:vogsphere/intra-uuid-f19a5886-2cbb-4115-88ec-39ee30e73b41-5313833-vshkonda
+	url = https://github.com/vovashko/get_next_line.git
