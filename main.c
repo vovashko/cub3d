@@ -97,6 +97,7 @@ void draw_map(t_game *game)
 
 int main (int argc, char **argv)
 {
+	#if
     if (argc != 2)
     {
         printf("Error\nInvalid number of arguments\n");
