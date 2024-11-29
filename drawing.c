@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:06:20 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/27 17:25:14 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/29 16:36:53 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void draw_map(t_game *game)
 	{
 		while (x < 10)
 		{
-			if (game->map[i] == 1)
+			if (game->mfd->map[i] == "1")
 			{
 				if (mlx_image_to_window(game->mlx, game->wall, x * 50, y * 50) == -1)
 				{
