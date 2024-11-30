@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/30 14:58:41 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/30 16:02:01 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,31 @@ void	skip_spaces(char *line, int *i)
 		(*i)++;
 }
 
+int verify_color(char *line, int *i)
+{
+	int num;
+	
+	skip_spaces(line, i);
+	if (ft_isdigit(line[*i]) == 0)
+		handle_error("Missing color");
+	num = ft_atoi(&line[*i]);
+	return (num);
+}
+
 void	get_color(char *line, t_color *color)
 {
 	int	i;
 
 	i = 0;
-	skip_spaces(line, &i);
-	color->r = ft_atoi(&line[i]);
-	while (line[i] != ',')
+	color->r = verify_color(line, &i);
+	while (line && line[i] != ',')
 		i++;
 	i++;
-	color->g = ft_atoi(&line[i]);
-	while (line[i] != ',')
+	color->g = verify_color(line, &i);
+	while (line && line[i] != ',')
 		i++;
 	i++;
-	color->b = ft_atoi(&line[i]);
+	color->b = verify_color(line, &i);
 }
 
 void	get_map_height(t_map_file_data *mfd)
@@ -152,6 +162,17 @@ void	get_file_data(t_map_file_data *mfd, int fd)
 	close(fd);
 }
 
+bool check_color_range(t_color *color)
+{
+	if (color->r < 0 || color->r > 255)
+		return (false);
+	if (color->g < 0 || color->g > 255)
+		return (false);
+	if (color->b < 0 || color->b > 255)
+		return (false);
+	return (true);
+}
+
 bool	confirm_data_from_mfd(t_map_file_data *mfd)
 {
 	if (mfd->north_texture == NULL || mfd->south_texture == NULL
@@ -160,16 +181,14 @@ bool	confirm_data_from_mfd(t_map_file_data *mfd)
 		handle_error("Missing texture");
 		return (false);
 	}
-	if (mfd->floor_color->r == -1 || mfd->floor_color->g == -1
-		|| mfd->floor_color->b == -1)
+	if (!check_color_range(mfd->floor_color))
 	{
-		handle_error("Missing floor color");
+		handle_error("Invalid floor color");
 		return (false);
 	}
-	if (mfd->ceiling_color->r == -1 || mfd->ceiling_color->g == -1
-		|| mfd->ceiling_color->b == -1)
+	if (!check_color_range(mfd->ceiling_color))
 	{
-		handle_error("Missing ceiling color");
+		handle_error("Invalid ceiling color");
 		return (false);
 	}
 	if (mfd->height == 0)
@@ -179,6 +198,8 @@ bool	confirm_data_from_mfd(t_map_file_data *mfd)
 	}
 	return (true);
 }
+
+
 
 bool	check_file_content(t_map_file_data *mfd)
 {
