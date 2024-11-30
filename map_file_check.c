@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/30 14:07:35 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/30 14:58:41 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,37 +68,17 @@ void	get_map_height(t_map_file_data *mfd)
 		if (line[i] == '1')
 			mfd->height++;
 		else if (line[i] != '1' && mfd->height > 0)
+		{
+			free(line);
 			break ;
+		}
 		free(line);
 		line = get_next_line(temp);
 	}
+	while((line = get_next_line(temp)))
+		free(line);
 	close(temp);
 }
-
-// void	get_map_width(t_map_file_data *mfd)
-// {
-// 	char	*line;
-// 	int		i;
-// 	int		width;
-
-// 	fd = open(mfd->file, O_RDONLY);
-
-// 	line = get_next_line(fd);
-// 	while (line != NULL)
-// 	{
-// 		width = 0;
-// 		i = 0;
-// 		while (line[i] != '\n' && line[i] != '\0')
-// 		{
-// 			width++;
-// 			i++;
-// 		}
-// 		if (width > mfd->width)
-// 			mfd->width = width;
-// 		line = get_next_line(fd);
-// 	}
-// 	close(fd);
-// }
 
 void	get_map(t_map_file_data *mfd)
 {
@@ -107,8 +87,9 @@ void	get_map(t_map_file_data *mfd)
 	int		x;
 	char	*line;
 
-	get_map_height(mfd);
 	mfd->map = (char **)malloc(sizeof(char *) * mfd->height);
+	if (mfd->map == NULL)
+		handle_error("Failed to allocate memory");
 	y = 0;
 	x = 0;
 	fd = open(mfd->file, O_RDONLY);
@@ -116,15 +97,22 @@ void	get_map(t_map_file_data *mfd)
 		handle_error("Failed to open file");
 	while ((line = get_next_line(fd)))
 	{
+		x = 0;	
 		skip_spaces(line, &x);
 		if (line[x] == '1')
 			break ;
 		free(line);
 	}
-	while (y < mfd->height)
+	
+	while (y < mfd->height && line != NULL)
 	{
-		if (line == NULL)
-			handle_error("Invalid map");
+		x = 0;
+		skip_spaces(line, &x);
+		if (line[x] == '\0' || line[x] == '\n')
+		{
+			free(line);
+			break ;
+		}
 		mfd->map[y] = ft_strdup(line);
 		if (mfd->map[y] == NULL)
 			handle_error("Failed to allocate memory");
@@ -132,6 +120,7 @@ void	get_map(t_map_file_data *mfd)
 		y++;
 		line = get_next_line(fd);
 	}
+	free(line);
 	close(fd);
 }
 
@@ -199,6 +188,7 @@ bool	check_file_content(t_map_file_data *mfd)
 	if (fd == -1)
 		return (false);
 	get_file_data(mfd, fd);
+	get_map_height(mfd);
 	get_map(mfd);
 	if (confirm_data_from_mfd(mfd) == false)
 		return (false);
