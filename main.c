@@ -12,6 +12,27 @@
 
 #include "cub3d.h"
 
+void free_mfd(t_map_file_data *mfd)
+{
+	int i;
+
+	i = 0;
+	while (i < mfd->height)
+	{
+		free(mfd->map[i]);
+		i++;
+	}
+	free(mfd->map);
+	free(mfd->north_texture);
+	free(mfd->south_texture);
+	free(mfd->west_texture);
+	free(mfd->east_texture);
+	free(mfd->floor_color);
+	free(mfd->ceiling_color);
+	free(mfd);
+}
+
+
 int main (int argc, char **argv)
 {
 	t_game* game = (t_game *)malloc(sizeof(t_game));
@@ -58,5 +79,7 @@ int main (int argc, char **argv)
     mlx_loop(game->mlx);
     mlx_terminate(game->mlx);
 	#endif
+	free_mfd(game->mfd);
+	free(game);
     return (0);
 }

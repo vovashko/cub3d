@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/29 16:31:15 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/30 13:31:42 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 
 void	init_game(t_game *game, char *map_file)
 {
+	
+#if TEST_MODE == 1
 	mlx_texture_t	*texture;
-
+	
+	
 	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", true);
 	texture = mlx_load_png("textures/north.png");
 	game->background = mlx_texture_to_image(game->mlx, texture);
@@ -37,9 +40,9 @@ void	init_game(t_game *game, char *map_file)
 		printf("Error\nFailed to create player image\n");
 		exit(1);
 	}
-#if TEST_MODE == 1
+
 	game->player->player_img->enabled = false;
-#endif
+
 	game->wall = mlx_texture_to_image(game->mlx,
 			mlx_load_png("textures/west.png"));
 	if (mlx_resize_image(game->wall, 50, 50) == false)
@@ -53,6 +56,7 @@ void	init_game(t_game *game, char *map_file)
 	game->player->dx = cos(game->player->dir) * 5;
 	game->player->dy = sin(game->player->dir) * 5;
 	game->player->fov = PI / 3;
+#endif
 #if TEST_MODE == 2
 	init_mfd(game, map_file);
 #endif

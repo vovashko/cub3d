@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/30 13:21:45 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/30 13:45:35 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	get_map_height(t_map_file_data *mfd)
 			mfd->height++;
 		else if (line[i] != '1' && mfd->height > 0)
 			break;
+		free(line);
 		line = get_next_line(temp);
 	}
 	close(temp);
@@ -110,7 +111,7 @@ void	get_map(t_map_file_data *mfd)
 	char	*line;
 
 	get_map_height(mfd);
-	mfd->map = (char **)malloc(sizeof(char *) * mfd->height + 1);
+	mfd->map = (char **)malloc(sizeof(char *) * mfd->height);
 	y = 0;
 	fd = open(mfd->file, O_RDONLY);
 	if (fd == -1)
@@ -123,18 +124,15 @@ void	get_map(t_map_file_data *mfd)
 	}
 	while (y < mfd->height)
 	{
-		
-		printf("the line is %s\n", line);
 		if (line == NULL)
 			handle_error("Invalid map");
 		mfd->map[y] = ft_strdup(line);
 		if (mfd->map[y] == NULL)
 			handle_error("Failed to allocate memory");
 		free(line);
-		line = get_next_line(fd);
 		y++;
+		line = get_next_line(fd);
 	}
-	mfd->map[y] = NULL;
 	close(fd);
 }
 
@@ -150,17 +148,18 @@ void	get_file_data(t_map_file_data *mfd, int fd)
 		i = 0;
 		skip_spaces(line, &i);
 		if (line[i] == 'N' && line[i + 1] == 'O')
-			mfd->north_texture = &line[i + 2];
+			mfd->north_texture = ft_strdup(&line[i + 2]);
 		else if (line[i] == 'S' && line[i + 1] == 'O')
-			mfd->south_texture = &line[i + 2];
+			mfd->south_texture = ft_strdup(&line[i + 2]);
 		else if (line[i] == 'W' && line[i + 1] == 'E')
-			mfd->west_texture = &line[i + 2];
+			mfd->west_texture = ft_strdup(&line[i + 2]);
 		else if (line[i] == 'E' && line[i + 1] == 'A')
-			mfd->east_texture = &line[i + 2];
+			mfd->east_texture = ft_strdup(&line[i + 2]);
 		else if (line[i] == 'F')
 			get_color(&line[i + 2], mfd->floor_color);
 		else if (line[i] == 'C')
 			get_color(&line[i + 2], mfd->ceiling_color);
+		free(line);
 		line = get_next_line(fd);
 	}
 	close(fd);
