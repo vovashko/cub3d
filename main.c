@@ -35,7 +35,7 @@ void free_mfd(t_map_file_data *mfd)
 
 int main (int argc, char **argv)
 {
-	t_game* game = (t_game *)malloc(sizeof(t_game));
+	
 	#if TEST_MODE == 2
     if (argc != 2)
     {
@@ -50,6 +50,7 @@ int main (int argc, char **argv)
     }
 	#endif
     #if TEST_MODE == 2
+	t_game* game = (t_game *)malloc(sizeof(t_game));
     init_game(game, argv[1]);
 	int i = 0;
 	while(i < game->mfd->height)
