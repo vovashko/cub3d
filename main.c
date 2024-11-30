@@ -31,7 +31,7 @@ int main (int argc, char **argv)
     #if TEST_MODE == 2
     init_game(game, argv[1]);
 	int i = 0;
-	while(i <= game->mfd->height)
+	while(i < game->mfd->height)
 	{
 		printf("the maps %s\n", game->mfd->map[i]);
 		i++;

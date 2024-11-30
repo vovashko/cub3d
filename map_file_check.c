@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/29 17:49:31 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/30 13:21:45 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,14 @@ void	get_color(char *line, t_color *color)
 	color->r = ft_atoi(&line[i]);
 	while (line[i] != ',')
 		i++;
-	color->g = ft_atoi(&line[i + 1]);
+	i++;
+	printf("line after r %s\n", &line[i]);
+	color->g = ft_atoi(&line[i]);
 	while (line[i] != ',')
 		i++;
-	color->b = ft_atoi(&line[i + 1]);
+	i++;
+	printf("line after g %s\n", &line[i]);
+	color->b = ft_atoi(&line[i]);
 }
 
 
@@ -99,21 +103,35 @@ void	get_map_height(t_map_file_data *mfd)
 // 	close(fd);
 // }
 
-void	get_map(t_map_file_data *mfd, char *line)
+void	get_map(t_map_file_data *mfd)
 {
+	int		fd;
 	int		y;
+	char	*line;
 
 	get_map_height(mfd);
 	mfd->map = (char **)malloc(sizeof(char *) * mfd->height + 1);
 	y = 0;
-	while (y <= mfd->height)
+	fd = open(mfd->file, O_RDONLY);
+	if (fd == -1)
+		handle_error("Failed to open file");
+	while ((line = get_next_line(fd)))
 	{
+		if (line[0] == '1')
+			break;
+		free(line);
+	}
+	while (y < mfd->height)
+	{
+		
 		printf("the line is %s\n", line);
 		if (line == NULL)
 			handle_error("Invalid map");
 		mfd->map[y] = ft_strdup(line);
 		if (mfd->map[y] == NULL)
 			handle_error("Failed to allocate memory");
+		free(line);
+		line = get_next_line(fd);
 		y++;
 	}
 	mfd->map[y] = NULL;
@@ -143,14 +161,9 @@ void	get_file_data(t_map_file_data *mfd, int fd)
 			get_color(&line[i + 2], mfd->floor_color);
 		else if (line[i] == 'C')
 			get_color(&line[i + 2], mfd->ceiling_color);
-		else if (line[i] == '1')
-		{
-			printf("the map line is %s\n", line);
-			get_map(mfd, line);
-			
-		}
 		line = get_next_line(fd);
 	}
+	close(fd);
 }
 
 bool	check_file_content(t_map_file_data *mfd)
@@ -168,6 +181,7 @@ bool	check_file_content(t_map_file_data *mfd)
 	// 	return (false);
 	// }
 	get_file_data(mfd, fd);
+	get_map(mfd);
 	return (true);
 }
 
