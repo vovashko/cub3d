@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/30 13:59:52 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/11/30 14:07:35 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,17 +104,20 @@ void	get_map(t_map_file_data *mfd)
 {
 	int		fd;
 	int		y;
+	int		x;
 	char	*line;
 
 	get_map_height(mfd);
 	mfd->map = (char **)malloc(sizeof(char *) * mfd->height);
 	y = 0;
+	x = 0;
 	fd = open(mfd->file, O_RDONLY);
 	if (fd == -1)
 		handle_error("Failed to open file");
 	while ((line = get_next_line(fd)))
 	{
-		if (line[0] == '1')
+		skip_spaces(line, &x);
+		if (line[x] == '1')
 			break ;
 		free(line);
 	}
