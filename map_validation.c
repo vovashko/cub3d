@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/12/02 12:36:50 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/02 16:50:34 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/02 17:12:48 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-
-
-
 
 size_t get_map_width(char **map, int rows)
 {
@@ -45,6 +41,26 @@ size_t get_map_width(char **map, int rows)
 		y++;
 	}
 	return (width);
+}
+
+bool check_valid_chars(char **map, int rows)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < rows)
+	{
+		j = 0;
+		while (map[i][j] != '\0')
+		{
+			if (map[i][j] != '0' && map[i][j] != '1' && map[i][j] != 'N' && map[i][j] != 'S' && map[i][j] != 'W' && map[i][j] != 'E' && map[i][j] != ' ')
+				return (false);
+			j++;
+		}
+		i++;
+	}
+	return (true);
 }
 
 
@@ -113,19 +129,46 @@ bool check_enclosure(char **map, int rows, size_t cols)
     return true;
 }
 
+char **normalize_map(char **map, int rows, size_t cols)
+{
+	char **new_map = malloc(sizeof(char *) * rows);
+	for (int i = 0; i < rows; i++)
+	{
+		new_map[i] = malloc(sizeof(char) * cols + 1);
+		new_map[i][0] = ' ';
+		new_map[i] = ft_strjoin(new_map[i], map[i]);
+		if (ft_strlen(new_map[i]) < cols + 1)
+		{
+			size_t j = ft_strlen(new_map[i]);
+			while (j < cols)
+			{
+				new_map[i][j] = ' ';
+				j++;
+			}
+			new_map[i][j] = '\0';
+		}
+	}
+	return new_map;
+}
 
 // Main for testing
 int main()
 {
     char *map[] = {
-        "     111111111    ",
-        " 11110000001111111",
-        " 1S00000101       ",
-        " 11111111111      "
+        "    111111111",
+        "11110000001111111",
+        "100000100111",
+        "11111111111S"
     };
 
     t_player *player = malloc(sizeof(t_player));
     int rows = 4;
+	if (!check_valid_chars(map, rows))
+	{
+		printf("Invalid characters in the map.\n");
+		return (1);
+	}
+	
 
     if (!check_starting_pos(map, rows, player)) {
         printf("Invalid starting position.\n");
@@ -141,12 +184,19 @@ int main()
 
     size_t cols = get_map_width(map, rows);
     printf("Map width: %zu\n", cols);
+	char **new_map = normalize_map(map, rows, cols);
+	
+	for (int i = 0; i < rows; i++)
+	{
+		printf("the new map is %s\n", new_map[i]);
+	}
 
-	if (check_enclosure(map, rows, cols))
+	if (check_enclosure(new_map, rows, cols))
         printf("The map is valid and enclosed!\n");
     else
         printf("The map is invalid (not properly enclosed)!\n");
     free(player);
+	free(new_map);
 
     return 0;
 }
