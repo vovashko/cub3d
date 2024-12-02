@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/12/02 12:36:50 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/02 17:12:48 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/02 17:26:10 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,19 +150,33 @@ char **normalize_map(char **map, int rows, size_t cols)
 	}
 	return new_map;
 }
+bool check_top_and_bottom(char *line)
+{
+	int i;
+
+	i = 0;
+	while (line[i] != '\0')
+	{
+		if (line[i] != '1' && line[i] != ' ')
+			return (false);
+		i++;
+	}
+	return (true);
+}
 
 // Main for testing
 int main()
 {
     char *map[] = {
-        "    111111111",
-        "11110000001111111",
-        "100000100111",
-        "11111111111S"
+        "    1111111111",
+        "111100000011111",
+        "10000010S111",
+        "111111111111",
+		"11 11  11  1"
     };
 
     t_player *player = malloc(sizeof(t_player));
-    int rows = 4;
+    int rows = 5;
 	if (!check_valid_chars(map, rows))
 	{
 		printf("Invalid characters in the map.\n");
@@ -191,12 +205,12 @@ int main()
 		printf("the new map is %s\n", new_map[i]);
 	}
 
-	if (check_enclosure(new_map, rows, cols))
+	if (check_enclosure(new_map, rows, cols) && check_top_and_bottom(new_map[0]) && check_top_and_bottom(new_map[rows - 1]))
         printf("The map is valid and enclosed!\n");
     else
         printf("The map is invalid (not properly enclosed)!\n");
     free(player);
-	free(new_map);
+	free(new_map); // should properly free the new_map
 
     return 0;
 }

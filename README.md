@@ -2,11 +2,7 @@
 you got cubed
 
 To-dos:
-- add map validation: 
-	- need to be transform like in flood fill?
-	- one starting player position based on which side player is facing (N,S,W,E)
-	- no unexpected chars
-	- map should be fully encircled by the walls, no newlines
+- add 
 
 - check the raycaster:
 	- ensure it works as expected
@@ -34,6 +30,12 @@ Good things to add(aka bonus):
 	- map creation:
 		- Saving the map in the struct
 
+	- map validation: 
+		- ended up doing a different check with checking the chars around every space encountered in the map. if they are not surrounded by spaces or walls ('1') then the map is not correct.
+		- for that had to also do normalization of the map, to add a leading space to check for cases when player is in the wall and there are no leading spaces
+		- one starting player position based on which side player is facing (N,S,W,E)
+		- no unexpected chars
+		- map should be fully encircled by the walls, no newlines
 
 
 
