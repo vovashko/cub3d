@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/30 16:02:01 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/02 12:36:04 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,8 @@ bool	check_file_format(char *file)
 {
 	int	i;
 
-	i = 0;
-	while (file[i] != '\0')
-		i++;
-	if (file[i - 1] != 'b' || file[i - 2] != 'u' || file[i - 3] != 'c' || file[i
-		- 4] != '.')
+	i = ft_strlen(file) - 4; // to check the file extention which is 4 char long
+	if (ft_strncmp(&file[i], ".cub", 4) != 0)
 		return (false);
 	return (true);
 }
