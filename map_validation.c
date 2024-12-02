@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/12/02 12:36:50 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/02 17:26:10 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/02 17:28:27 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,16 @@ bool check_top_and_bottom(char *line)
 	return (true);
 }
 
+void free_map(char **map, int rows)
+{
+	for (int i = 0; i < rows; i++)
+	{
+		free(map[i]);
+	}
+	free(map);
+}
+
+
 // Main for testing
 int main()
 {
@@ -210,7 +220,7 @@ int main()
     else
         printf("The map is invalid (not properly enclosed)!\n");
     free(player);
-	free(new_map); // should properly free the new_map
+	free_map(new_map, rows); // should properly free the new_map
 
     return 0;
 }

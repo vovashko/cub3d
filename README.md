@@ -2,7 +2,8 @@
 you got cubed
 
 To-dos:
-- add 
+- add map validation:
+	- need to check the application with valgrind to ensure no leaks there
 
 - check the raycaster:
 	- ensure it works as expected
@@ -13,7 +14,7 @@ To-dos:
 
 Good things to add(aka bonus):
  - wall collision (i suppose it's a part of having the ray hit the wall and you not allowing a player to go through)
- - minimap (which is a pretty much a 2d representaition of what is happenign on the screen)
+ - minimap (which is a pretty much a 2d representaition of what is happening on the screen)
  - doors that open and close(exit?)
  - rotate with a mouse
  - sprite(if really want to but may be simpler than I think)
