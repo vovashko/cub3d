@@ -6,16 +6,9 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/12/02 12:36:50 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/02 17:28:27 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/05 13:01:52 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
-
-// - add map validation: 
-// 	- need to be transform like in flood fill?
-// 	- one starting player position based on which side player is facing (N,S,W,E)
-// 	- no unexpected chars
-// 	- map should be fully encircled by the walls, no newlines
-
 
 #include "cub3d.h"
 
@@ -131,25 +124,42 @@ bool check_enclosure(char **map, int rows, size_t cols)
 
 char **normalize_map(char **map, int rows, size_t cols)
 {
-	char **new_map = malloc(sizeof(char *) * rows);
-	for (int i = 0; i < rows; i++)
-	{
-		new_map[i] = malloc(sizeof(char) * cols + 1);
-		new_map[i][0] = ' ';
-		new_map[i] = ft_strjoin(new_map[i], map[i]);
-		if (ft_strlen(new_map[i]) < cols + 1)
-		{
-			size_t j = ft_strlen(new_map[i]);
-			while (j < cols)
-			{
-				new_map[i][j] = ' ';
-				j++;
-			}
-			new_map[i][j] = '\0';
-		}
-	}
-	return new_map;
+    char **new_map = malloc(sizeof(char *) * rows);
+    if (!new_map)
+        return NULL;
+
+    for (int i = 0; i < rows; i++)
+    {
+        // Allocate memory for the new row with +1 for null terminator
+        new_map[i] = malloc(sizeof(char) * (cols + 2 + 1));
+        if (!new_map[i])
+        {
+            // Free already allocated rows in case of failure
+            for (int j = 0; j < i; j++)
+                free(new_map[j]);
+            free(new_map);
+            return NULL;
+        }
+
+        // Add a leading space to the row
+        new_map[i][0] = ' ';
+
+        // Copy the original map row into the new row, starting after the leading space
+        size_t len = ft_strlen(map[i]);
+        ft_strlcpy(new_map[i] + 1, map[i], len + 1); // Copy at most cols - 1 characters
+
+        // Pad with spaces if the original row is shorter than cols
+        for (size_t j = len + 1; j < cols + 2; j++)
+            new_map[i][j] = ' ';
+
+
+        // Null-terminate the row
+        new_map[i][cols + 2] = '\0';
+    }
+
+    return new_map;
 }
+
 bool check_top_and_bottom(char *line)
 {
 	int i;
@@ -178,15 +188,13 @@ void free_map(char **map, int rows)
 int main()
 {
     char *map[] = {
-        "    1111111111",
-        "111100000011111",
-        "10000010S111",
-        "111111111111",
-		"11 11  11  1"
+        "111",
+		"101",
+		"S11",
     };
 
     t_player *player = malloc(sizeof(t_player));
-    int rows = 5;
+    int rows = 3;
 	if (!check_valid_chars(map, rows))
 	{
 		printf("Invalid characters in the map.\n");
@@ -215,7 +223,7 @@ int main()
 		printf("the new map is %s\n", new_map[i]);
 	}
 
-	if (check_enclosure(new_map, rows, cols) && check_top_and_bottom(new_map[0]) && check_top_and_bottom(new_map[rows - 1]))
+	if (check_enclosure(new_map, rows, cols + 2) && check_top_and_bottom(new_map[0]) && check_top_and_bottom(new_map[rows - 1]))
         printf("The map is valid and enclosed!\n");
     else
         printf("The map is invalid (not properly enclosed)!\n");
