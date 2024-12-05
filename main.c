@@ -32,6 +32,11 @@ void free_mfd(t_map_file_data *mfd)
 	free(mfd);
 }
 
+void free_player(t_player *player)
+{
+	free(player);
+}
+
 
 int main (int argc, char **argv)
 {
@@ -64,6 +69,11 @@ int main (int argc, char **argv)
 	printf("the south texture is %s\n", game->mfd->south_texture);
 	printf("the west texture is %s\n", game->mfd->west_texture);
 	printf("the east texture is %s\n", game->mfd->east_texture);
+	if(!map_check(game->mfd, game->player))
+	{
+		printf("Invalid map\n");
+		return (1);
+	}
 	#endif
 	#if TEST_MODE == 0
 	(void)argc;

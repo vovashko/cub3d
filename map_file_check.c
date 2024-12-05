@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/02 12:36:04 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/05 18:06:23 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,33 +59,65 @@ void	get_color(char *line, t_color *color)
 	i++;
 	color->b = verify_color(line, &i);
 }
-
-void	get_map_height(t_map_file_data *mfd)
+char *skip_to_map(int fd)
 {
-	char	*line;
-	int		i;
-	int		temp;
+    char *line;
+    int i;
 
-	temp = open(mfd->file, O_RDONLY);
-	line = get_next_line(temp);
-	while (line != NULL)
-	{
-		i = 0;
-		skip_spaces(line, &i);
-		if (line[i] == '1')
-			mfd->height++;
-		else if (line[i] != '1' && mfd->height > 0)
-		{
-			free(line);
-			break ;
-		}
-		free(line);
-		line = get_next_line(temp);
-	}
-	while((line = get_next_line(temp)))
-		free(line);
-	close(temp);
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        i = 0;
+        // Skip leading spaces
+        while (line[i] == ' ')
+            i++;
+
+        // Check if the line is part of the configuration or empty
+        if (line[i] == '\n' ||
+            (line[i] == 'N' && line[i + 1] == 'O') ||
+            (line[i] == 'S' && line[i + 1] == 'O') ||
+            (line[i] == 'W' && line[i + 1] == 'E') ||
+            (line[i] == 'E' && line[i + 1] == 'A') ||
+            (line[i] == 'F') ||
+            (line[i] == 'C'))
+        {
+            free(line);
+            continue;
+        }
+
+        // Return the first valid map line
+        return line;
+    }
+
+    return NULL; // Return NULL if no valid map line is found
 }
+
+void get_map_height(t_map_file_data *mfd)
+{
+    char *line;
+    int temp;
+
+    temp = open(mfd->file, O_RDONLY);
+    if (temp == -1)
+        handle_error("Failed to open file");
+
+    // Skip to the map section
+    line = skip_to_map(temp);
+
+    // Count map lines
+    while (line != NULL)
+    {
+        mfd->height++;
+        free(line);
+        line = get_next_line(temp);
+    }
+
+    close(temp);
+
+    if (mfd->height == 0)
+        handle_error("No valid map found in file");
+}
+
+
 
 void	get_map(t_map_file_data *mfd)
 {
@@ -102,15 +134,7 @@ void	get_map(t_map_file_data *mfd)
 	fd = open(mfd->file, O_RDONLY);
 	if (fd == -1)
 		handle_error("Failed to open file");
-	while ((line = get_next_line(fd)))
-	{
-		x = 0;	
-		skip_spaces(line, &x);
-		if (line[x] == '1')
-			break ;
-		free(line);
-	}
-	
+	line = skip_to_map(fd);
 	while (y < mfd->height && line != NULL)
 	{
 		x = 0;
@@ -123,6 +147,7 @@ void	get_map(t_map_file_data *mfd)
 		mfd->map[y] = ft_strdup(line);
 		if (mfd->map[y] == NULL)
 			handle_error("Failed to allocate memory");
+		mfd->map[y][ft_strlen(line) - 1] = '\0';
 		free(line);
 		y++;
 		line = get_next_line(fd);
@@ -141,17 +166,17 @@ void	get_file_data(t_map_file_data *mfd, int fd)
 	{
 		i = 0;
 		skip_spaces(line, &i);
-		if (line[i] == 'N' && line[i + 1] == 'O')
+		if ((line[i] == 'N' && line[i + 1] == 'O') && mfd->north_texture == NULL)
 			mfd->north_texture = ft_strdup(&line[i + 2]);
-		else if (line[i] == 'S' && line[i + 1] == 'O')
+		else if ((line[i] == 'S' && line[i + 1] == 'O') && mfd->south_texture == NULL)
 			mfd->south_texture = ft_strdup(&line[i + 2]);
-		else if (line[i] == 'W' && line[i + 1] == 'E')
+		else if ((line[i] == 'W' && line[i + 1] == 'E') && mfd->west_texture == NULL)
 			mfd->west_texture = ft_strdup(&line[i + 2]);
-		else if (line[i] == 'E' && line[i + 1] == 'A')
+		else if ((line[i] == 'E' && line[i + 1] == 'A') && mfd->east_texture == NULL)
 			mfd->east_texture = ft_strdup(&line[i + 2]);
-		else if (line[i] == 'F')
+		else if (line[i] == 'F' && mfd->floor_color->r == -1)
 			get_color(&line[i + 2], mfd->floor_color);
-		else if (line[i] == 'C')
+		else if (line[i] == 'C' && mfd->ceiling_color->r == -1)
 			get_color(&line[i + 2], mfd->ceiling_color);
 		free(line);
 		line = get_next_line(fd);

@@ -2,9 +2,6 @@
 you got cubed
 
 To-dos:
-- add map validation:
-	- need to check the application with valgrind to ensure no leaks there
-
 - check the raycaster:
 	- ensure it works as expected
 	- need to finalize by checking which ray (vertical or horizontal) is closer to the wall texture
@@ -37,6 +34,7 @@ Good things to add(aka bonus):
 		- one starting player position based on which side player is facing (N,S,W,E)
 		- no unexpected chars
 		- map should be fully encircled by the walls, no newlines
+		- need to check the application with valgrind to ensure no leaks there
 
 
 

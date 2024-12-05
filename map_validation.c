@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/12/02 12:36:50 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/05 13:01:52 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/05 17:03:22 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ bool check_valid_chars(char **map, int rows)
 		while (map[i][j] != '\0')
 		{
 			if (map[i][j] != '0' && map[i][j] != '1' && map[i][j] != 'N' && map[i][j] != 'S' && map[i][j] != 'W' && map[i][j] != 'E' && map[i][j] != ' ')
+			{
+				printf("Invalid character at (%d, %d): %c\n", i, j, map[i][j]);
 				return (false);
+			}
 			j++;
 		}
 		i++;
@@ -64,8 +67,6 @@ bool check_starting_pos(char **map, int height, t_player *player)
 
 	i = 0;
 	j = 0;
-	player->y = -1;
-	player->x = -1;
 	while (i < height)
 	{
 		j = 0;
@@ -185,50 +186,42 @@ void free_map(char **map, int rows)
 
 
 // Main for testing
-int main()
+bool map_check(t_map_file_data *mfd, t_player *player)
 {
-    char *map[] = {
-        "111",
-		"101",
-		"S11",
-    };
-
-    t_player *player = malloc(sizeof(t_player));
-    int rows = 3;
-	if (!check_valid_chars(map, rows))
+	if (!check_valid_chars(mfd->map, mfd->height))
 	{
 		printf("Invalid characters in the map.\n");
-		return (1);
+		return false;
 	}
 	
-
-    if (!check_starting_pos(map, rows, player)) {
+	printf("Map height: %d\n", mfd->height);
+    if (!check_starting_pos(mfd->map, mfd->height, player)) {
         printf("Invalid starting position.\n");
-        return (1);
+        return false;
     }
 	if (player->y == -1 || player->x == -1)
 	{
 		printf("No starting position found.\n");
-		return (1);
+		return false;
 	}
 	
 	printf("Player starting position: (%f, %f)\n", player->x, player->y);
 
-    size_t cols = get_map_width(map, rows);
-    printf("Map width: %zu\n", cols);
-	char **new_map = normalize_map(map, rows, cols);
+    mfd->width = get_map_width(mfd->map, mfd->height);
+    printf("Map width: %zu\n", mfd->width);
+	char **new_map = normalize_map(mfd->map, mfd->height, mfd->width);
 	
-	for (int i = 0; i < rows; i++)
+	for (int i = 0; i < mfd->height; i++)
 	{
 		printf("the new map is %s\n", new_map[i]);
 	}
 
-	if (check_enclosure(new_map, rows, cols + 2) && check_top_and_bottom(new_map[0]) && check_top_and_bottom(new_map[rows - 1]))
+	if (check_enclosure(new_map, mfd->height, mfd->width + 2) && check_top_and_bottom(new_map[0]) && check_top_and_bottom(new_map[mfd->height - 1]))
         printf("The map is valid and enclosed!\n");
     else
         printf("The map is invalid (not properly enclosed)!\n");
     free(player);
-	free_map(new_map, rows); // should properly free the new_map
+	free_map(new_map, mfd->height); // should properly free the new_map
 
-    return 0;
+    return true;
 }

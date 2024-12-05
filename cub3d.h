@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/02 13:15:59 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/05 16:13:58 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,6 @@ void key_hooks(void *params);
 void update_player(void *params);
 void draw_map(t_game *game);
 void free_mfd(t_map_file_data *mfd);
+bool map_check(t_map_file_data *mfd, t_player *player);
 
 #endif
