@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/05 18:06:23 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/09 14:26:49 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,18 +166,38 @@ void	get_file_data(t_map_file_data *mfd, int fd)
 	{
 		i = 0;
 		skip_spaces(line, &i);
-		if ((line[i] == 'N' && line[i + 1] == 'O') && mfd->north_texture == NULL)
-			mfd->north_texture = ft_strdup(&line[i + 2]);
-		else if ((line[i] == 'S' && line[i + 1] == 'O') && mfd->south_texture == NULL)
-			mfd->south_texture = ft_strdup(&line[i + 2]);
-		else if ((line[i] == 'W' && line[i + 1] == 'E') && mfd->west_texture == NULL)
-			mfd->west_texture = ft_strdup(&line[i + 2]);
-		else if ((line[i] == 'E' && line[i + 1] == 'A') && mfd->east_texture == NULL)
-			mfd->east_texture = ft_strdup(&line[i + 2]);
-		else if (line[i] == 'F' && mfd->floor_color->r == -1)
-			get_color(&line[i + 2], mfd->floor_color);
-		else if (line[i] == 'C' && mfd->ceiling_color->r == -1)
-			get_color(&line[i + 2], mfd->ceiling_color);
+		if (line[i] == 'N' && line[i + 1] == 'O')
+			if (mfd->north_texture == NULL)
+				mfd->north_texture = ft_strdup(&line[i + 2]);
+			else
+				handle_error("Duplicate NO texture");
+		else if (line[i] == 'S' && line[i + 1] == 'O')
+			if (mfd->south_texture == NULL)
+				mfd->south_texture = ft_strdup(&line[i + 2]);
+			else
+				handle_error("Duplicate SO texture");
+		else if (line[i] == 'W' && line[i + 1] == 'E')
+			if (mfd->west_texture == NULL)
+				mfd->west_texture = ft_strdup(&line[i + 2]);
+			else
+				handle_error("Duplicate WE texture");
+		else if (line[i] == 'E' && line[i + 1] == 'A')
+			if (mfd->east_texture == NULL)
+				mfd->east_texture = ft_strdup(&line[i + 2]);
+			else
+				handle_error("Duplicate EA texture");
+		else if (line[i] == 'F')
+			if (mfd->floor_color->r == -1)
+				get_color(&line[i + 2], mfd->floor_color);
+			else
+				handle_error("Duplicate color configuration");
+		else if (line[i] == 'C')
+		{
+			if (mfd->ceiling_color->r == -1)
+				get_color(&line[i + 2], mfd->ceiling_color);
+			else
+				handle_error("Duplicate color configuration");
+		}
 		free(line);
 		line = get_next_line(fd);
 	}
