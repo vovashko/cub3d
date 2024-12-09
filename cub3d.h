@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/05 16:13:58 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/09 16:25:25 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@
 #define MAP_HEIGHT 10
 #define MAP_SIZE 100
 #define PLAYER_SIZE 50
-#define ONE_DEGREE 0.01745329251
+#define RAD 0.01745329251
 
 #define WIDTH 800
 #define HEIGHT 600
-#define TEST_MODE 2
+#define TEST_MODE 0
 #define MAX_DOF 8
 
 typedef struct s_color
@@ -95,6 +95,7 @@ typedef struct s_game
 	mlx_image_t *wall;
 	t_player *player;
 	t_ray *ray;
+	int *map;   // remove after testing
 } t_game;
 
 

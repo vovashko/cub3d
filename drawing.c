@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:06:20 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/11/29 16:36:53 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/09 15:31:54 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ void draw_map(t_game *game)
 	{
 		while (x < 10)
 		{
-			if (game->mfd->map[i] == "1")
+			if (game->map[i] == 1)
 			{
-				if (mlx_image_to_window(game->mlx, game->wall, x * 50, y * 50) == -1)
+				if (mlx_image_to_window(game->mlx, game->wall, x * TILE_SIZE, y * TILE_SIZE) == -1)
 				{
 					printf("Error\nFailed to draw image\n");
 					exit(1);

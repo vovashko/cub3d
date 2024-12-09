@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/05 16:30:51 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/09 16:04:54 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void init_player(t_game *game)
 void	init_game(t_game *game, char *map_file)
 {
 	
-#if TEST_MODE == 1
+#if TEST_MODE == 0
 	mlx_texture_t	*texture;
 	
 	
@@ -66,8 +66,8 @@ void	init_game(t_game *game, char *map_file)
 	
 	game->player = (t_player *)malloc(sizeof(t_player));
 	game->player->player_img = mlx_texture_to_image(game->mlx,
-			mlx_load_png("textures/south.png"));
-	if (mlx_resize_image(game->player->player_img, 50, 50) == false)
+			mlx_load_png("textures/north.png"));
+	if (mlx_resize_image(game->player->player_img, TILE_SIZE / 4, TILE_SIZE / 4) == false)
 	{
 		printf("Error\nFailed to resize image\n");
 		exit(1);
@@ -78,11 +78,11 @@ void	init_game(t_game *game, char *map_file)
 		exit(1);
 	}
 
-	game->player->player_img->enabled = false;
+	// game->player->player_img->enabled = false;
 
 	game->wall = mlx_texture_to_image(game->mlx,
 			mlx_load_png("textures/west.png"));
-	if (mlx_resize_image(game->wall, 50, 50) == false)
+	if (mlx_resize_image(game->wall, TILE_SIZE, TILE_SIZE) == false)
 	{
 		printf("Error\nFailed to resize image\n");
 		exit(1);
@@ -99,12 +99,19 @@ void	init_game(t_game *game, char *map_file)
 	init_player(game);
 #endif
 #if TEST_MODE == 0
+	game->map = (int *)malloc(sizeof(int) * 100);
 	int map[100] = {
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0,
-			0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
-			0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-			1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-			1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+		
 	};
 	for (int i = 0; i < 100; i++)
 	{
@@ -112,6 +119,20 @@ void	init_game(t_game *game, char *map_file)
 	};
 	(void)map_file;
 #endif
+
+	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
+	ray->ray_num = 1;
+	ray->x = game->player->x;
+	ray->y = game->player->y;
+	ray->dir = game->player->dir;
+	ray->x_offset = 0;
+	ray->y_offset = 0;
+	ray->map_x = 0;
+	ray->map_y = 0;
+	ray->map_pos = 0;
+	ray->dof = 0;
+	game->ray = ray;
+	
 }
 
 
