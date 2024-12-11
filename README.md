@@ -3,11 +3,13 @@ you got cubed
 
 To-dos:
 - check the raycaster:
-	- ensure it works as expected
-	- need to finalize by checking which ray (vertical or horizontal) is closer to the wall texture
+	- need to work on the t_ray struct to evaluate what is necessary to keep, what is redundant. 
+	- introduced perform_dda function, however, everything requires testing. It seems like Bresenham is a better choice for the algo, so need to look into its implementation. If it's too much, we can get back to DDA (the sample code uses DDA)
+
+	
 
 - refactoring and leaks
-- find tester
+
 
 Good things to add(aka bonus):
  - wall collision (i suppose it's a part of having the ray hit the wall and you not allowing a player to go through)
@@ -36,5 +38,6 @@ Good things to add(aka bonus):
 		- map should be fully encircled by the walls, no newlines
 		- need to check the application with valgrind to ensure no leaks there
 
+	- found tester, added as a submodule
 
 
