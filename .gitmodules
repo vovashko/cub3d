@@ -7,3 +7,6 @@
 [submodule "libft"]
 	path = libft
 	url = https://github.com/vovashko/libft.git
+[submodule "cub_test3r"]
+	path = cub_test3r
+	url = https://github.com/xannyxs/cub_test3r.git
