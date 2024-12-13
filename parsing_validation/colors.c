@@ -6,11 +6,11 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/12/13 12:04:15 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/13 12:04:36 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 12:40:47 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 bool check_color_range(t_color *color)
 {

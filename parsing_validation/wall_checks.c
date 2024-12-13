@@ -6,11 +6,11 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/12/13 12:25:10 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/13 12:25:27 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 12:41:06 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 bool is_surrounded_by_walls_or_spaces(char **map, size_t x, int y, int rows, size_t cols)
 {

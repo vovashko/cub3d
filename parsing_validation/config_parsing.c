@@ -6,11 +6,11 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/12/13 12:05:31 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/13 12:12:59 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 12:41:27 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	get_file_data(t_map_file_data *mfd, int fd)
 {
@@ -34,7 +34,7 @@ void	get_file_data(t_map_file_data *mfd, int fd)
 			if (mfd->south_texture == NULL)
 			{
 				skip_spaces(line, &i);
-				mfd->south_texture = ft_strdup(&line[i])
+				mfd->south_texture = ft_strdup(&line[i]);
 			}
 			else
 				handle_error("Duplicate SO texture");
@@ -42,7 +42,7 @@ void	get_file_data(t_map_file_data *mfd, int fd)
 			if (mfd->west_texture == NULL)
 			{
 				skip_spaces(line, &i);
-				mfd->west_texture = ft_strdup(&line[i])
+				mfd->west_texture = ft_strdup(&line[i]);
 			}			
 			else
 				handle_error("Duplicate WE texture");
@@ -50,7 +50,7 @@ void	get_file_data(t_map_file_data *mfd, int fd)
 			if (mfd->east_texture == NULL)
 			{
 				skip_spaces(line, &i);
-				mfd->east_texture = ft_strdup(&line[i])
+				mfd->east_texture = ft_strdup(&line[i]);
 			}
 			else
 				handle_error("Duplicate EA texture");
