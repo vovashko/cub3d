@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/09 14:26:49 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 11:57:35 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,12 @@ void get_map_height(t_map_file_data *mfd)
     // Count map lines
     while (line != NULL)
     {
-        mfd->height++;
+        if (line[0] == '\n')
+			break ;
+		mfd->height++;
         free(line);
         line = get_next_line(temp);
+		
     }
 
     close(temp);
@@ -152,7 +155,6 @@ void	get_map(t_map_file_data *mfd)
 		y++;
 		line = get_next_line(fd);
 	}
-	free(line);
 	close(fd);
 }
 
