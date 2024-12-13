@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/09 16:25:25 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 12:39:05 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 
 #define WIDTH 800
 #define HEIGHT 600
-#define TEST_MODE 0
+#define TEST_MODE 2
 #define MAX_DOF 8
 
 typedef struct s_color
@@ -61,19 +61,28 @@ typedef struct s_map_file_data
 } t_map_file_data;
 
 
-typedef struct s_ray
-{
-	int ray_num; 	// ray number
-	int map_x; // map x
-	int map_y; // map y
-	int map_pos; // map position
-	int dof; // direction of field
-	float x;   // ray x
-	float y;	// ray y
-	float dir;   // ray angle
-	float x_offset;	// x offset
-	float y_offset;	// y offset
+typedef struct s_ray {
+    int ray_num;         // Ray number
+    int map_x;           // Map grid x-coordinate
+    int map_y;           // Map grid y-coordinate
+    int map_pos;         // Map array position
+    int dof;             // Depth of field
+    int hit;             // 1 if a wall is hit, 0 otherwise
+    int hit_orientation; // 0 for horizontal, 1 for vertical
+    float x;             // Current ray x-coordinate
+    float y;             // Current ray y-coordinate
+    float h_x;           // Horizontal hit x-coordinate
+    float h_y;           // Horizontal hit y-coordinate
+    float v_x;           // Vertical hit x-coordinate
+    float v_y;           // Vertical hit y-coordinate
+    float dir;           // Ray angle
+    float x_offset;      // Offset for stepping x
+    float y_offset;      // Offset for stepping y
+    float h_dist;        // Distance to horizontal hit
+    float v_dist;        // Distance to vertical hit
+    float texture_offset; // Offset for texturing
 } t_ray;
+
 
 
 typedef struct s_player
@@ -107,5 +116,27 @@ void update_player(void *params);
 void draw_map(t_game *game);
 void free_mfd(t_map_file_data *mfd);
 bool map_check(t_map_file_data *mfd, t_player *player);
+void skip_spaces(char *line, int *i);
+void handle_error(char *error);
+void free_map(char **map, int rows);
+void get_file_data(t_map_file_data *mfd, int fd);
+void get_map_height(t_map_file_data *mfd);
+void get_map(t_map_file_data *mfd);
+bool check_file_content(t_map_file_data *mfd);
+void get_color(char *line, t_color *color);
+int verify_color(char *line, int *i);
+bool check_color_range(t_color *color);
+bool confirm_data_from_mfd(t_map_file_data *mfd);
+char *skip_to_map(int fd);
+size_t get_map_width(char **map, int rows);
+char **normalize_map(char **map, int rows, size_t cols);
+bool check_enclosure(char **map, int rows, size_t cols);
+bool is_surrounded_by_walls_or_spaces(char **map, size_t x, int y, int rows, size_t cols);
+bool check_top_and_bottom(char *line);
+bool check_valid_chars(char **map, int rows);
+bool check_starting_pos(char **map, int rows, t_player *player);
+
+
+
 
 #endif
