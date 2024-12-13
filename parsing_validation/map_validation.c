@@ -6,11 +6,11 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/12/02 12:36:50 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/13 12:25:32 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 12:43:44 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 bool check_valid_chars(char **map, int rows)
 {
@@ -119,13 +119,7 @@ bool map_check(t_map_file_data *mfd, t_player *player)
     }
 
     mfd->width = get_map_width(mfd->map, mfd->height);
-    printf("Map width: %zu\n", mfd->width);
 	char **new_map = normalize_map(mfd->map, mfd->height, mfd->width);
-	
-	for (int i = 0; i < mfd->height; i++)
-	{
-		printf("the new map is %s\n", new_map[i]);
-	}
 
 	if (check_enclosure(new_map, mfd->height, mfd->width + 2) && check_top_and_bottom(new_map[0]) && check_top_and_bottom(new_map[mfd->height - 1]))
         printf("The map is valid and enclosed!\n");

@@ -6,11 +6,11 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:49 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/13 12:16:56 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 12:44:36 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 char *skip_to_map(int fd)
 {
@@ -54,7 +54,6 @@ size_t get_map_width(char **map, int rows)
 	
 	while (y < rows)
 	{
-		printf("the map is %s\n", map[y]);
 		current_len = ft_strlen(map[y]);
 		if (current_len > width)
 			width = current_len;
