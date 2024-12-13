@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/09 16:25:25 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 16:21:43 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 #define MAP_SIZE 100
 #define PLAYER_SIZE 50
 #define RAD 0.01745329251
+#define EPSILON 0.0001
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -61,18 +62,15 @@ typedef struct s_map_file_data
 } t_map_file_data;
 
 
-typedef struct s_ray
-{
-	int ray_num; 	// ray number
-	int map_x; // map x
-	int map_y; // map y
-	int map_pos; // map position
-	int dof; // direction of field
-	float x;   // ray x
-	float y;	// ray y
-	float dir;   // ray angle
-	float x_offset;	// x offset
-	float y_offset;	// y offset
+typedef struct s_ray {
+   float camera_x;
+   float ray_dir_x;
+   float ray_dir_y;
+   float map_x;
+   float map_y;
+   float plane_x;
+   float plane_y;
+   
 } t_ray;
 
 

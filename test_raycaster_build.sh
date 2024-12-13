@@ -1,0 +1,1 @@
+cc raycaster.c init.c drawing.c controls.c parsing_validation/parsing_utils.c -Wall -Wextra -Werror -ldl -lglfw -pthread -lm -o raycaster -g -I. MLX42/build/libmlx42.a
