@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/09 16:04:54 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 15:49:53 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ void	init_game(t_game *game, char *map_file)
 		printf("Error\nFailed to resize image\n");
 		exit(1);
 	}
-	game->player->x = 5;
-	game->player->y = 5;
+	game->player->x = 5 * TILE_SIZE;
+	game->player->y = 5 * TILE_SIZE;
 	game->player->dir = 0;
 	game->player->dx = cos(game->player->dir) * 5;
 	game->player->dy = sin(game->player->dir) * 5;
@@ -121,7 +121,6 @@ void	init_game(t_game *game, char *map_file)
 #endif
 
 	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
-	ray->ray_num = 1;
 	ray->x = game->player->x;
 	ray->y = game->player->y;
 	ray->dir = game->player->dir;
@@ -135,5 +134,29 @@ void	init_game(t_game *game, char *map_file)
 	
 }
 
-
-
+// void	init_mfd(t_game *game, char *map_file)
+// {
+// 	game->mfd = (t_map_file_data *)malloc(sizeof(t_map_file_data));
+// 	game->mfd->file = map_file;
+// 	game->mfd->width = 0;
+// 	game->mfd->height = 0;
+// 	game->mfd->floor_color = (t_color *)malloc(sizeof(t_color));
+// 	game->mfd->floor_color->r = -1;
+// 	game->mfd->floor_color->g = -1;
+// 	game->mfd->floor_color->b = -1;
+// 	game->mfd->ceiling_color = (t_color *)malloc(sizeof(t_color));
+// 	game->mfd->ceiling_color->r = -1;
+// 	game->mfd->ceiling_color->g = -1;
+// 	game->mfd->ceiling_color->b = -1;
+// 	game->mfd->north_texture = NULL;
+// 	game->mfd->south_texture = NULL;
+// 	game->mfd->west_texture = NULL;
+// 	game->mfd->east_texture = NULL;
+// 	game->mfd->map = NULL;
+// 	if (check_file_content(game->mfd) == false)
+// 	{
+// 		handle_error("Invalid file content");
+// 		free_mfd(game->mfd);
+// 		exit(1);
+// 	}
+// }

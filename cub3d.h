@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/13 12:39:05 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/13 16:21:43 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 #define MAP_SIZE 100
 #define PLAYER_SIZE 50
 #define RAD 0.01745329251
+#define EPSILON 0.0001
 
 #define WIDTH 800
 #define HEIGHT 600

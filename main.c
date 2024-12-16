@@ -54,21 +54,24 @@ int main (int argc, char **argv)
         return (1);
     }
 	#endif
-    #if TEST_MODE == 2
+    
 	t_game* game = (t_game *)malloc(sizeof(t_game));
     init_game(game, argv[1]);
-	int i = 0;
-	while(i < game->mfd->height)
-	{
-		printf("the maps %s\n", game->mfd->map[i]);
-		i++;
-	}
-	printf("the floor color is %d %d %d\n", game->mfd->floor_color->r, game->mfd->floor_color->g, game->mfd->floor_color->b);
-	printf("the ceiling color is %d %d %d\n", game->mfd->ceiling_color->r, game->mfd->ceiling_color->g, game->mfd->ceiling_color->b);
-	printf("the north texture is %s\n", game->mfd->north_texture);
-	printf("the south texture is %s\n", game->mfd->south_texture);
-	printf("the west texture is %s\n", game->mfd->west_texture);
-	printf("the east texture is %s\n", game->mfd->east_texture);
+	
+	#if TEST_MODE == 2
+	// printf("height %d\n", game->mfd->height - 1);
+	// int i = 0;
+	// while(i < game->mfd->height)
+	// {
+	// 	printf("the maps %d %s\n", i, game->mfd->map[i]);
+	// 	i++;
+	// }
+	// printf("the floor color is %d %d %d\n", game->mfd->floor_color->r, game->mfd->floor_color->g, game->mfd->floor_color->b);
+	// printf("the ceiling color is %d %d %d\n", game->mfd->ceiling_color->r, game->mfd->ceiling_color->g, game->mfd->ceiling_color->b);
+	// printf("the north texture is %s\n", game->mfd->north_texture);
+	// printf("the south texture is %s\n", game->mfd->south_texture);
+	// printf("the west texture is %s\n", game->mfd->west_texture);
+	// printf("the east texture is %s\n", game->mfd->east_texture);
 	if(!map_check(game->mfd, game->player))
 	{
 		printf("Invalid map\n");

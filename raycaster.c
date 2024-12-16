@@ -6,108 +6,79 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 17:23:51 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/11 17:02:18 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/16 16:26:18 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
  #include "cub3d.h"
 
-void perform_dda (t_ray *ray, int *map)
+int get_rgba(int r, int g, int b, int a)
 {
-	while (ray->dof < MAX_DOF)
-		{
-			ray->map_x = (int)(ray->x) / TILE_SIZE;
-			ray->map_y = (int)(ray->y) / TILE_SIZE;
-			ray->map_pos = ray->map_y * MAP_WIDTH + ray->map_x; // instead of 10, use the actual map width
-			if (ray->map_pos >= 0 && ray->map_pos < 100 && map[ray->map_pos] == 1) // instead of 100, use the actual map size
-				ray->dof = MAX_DOF;
-			else
-			{
-				ray->x += ray->x_offset;
-				ray->y += ray->y_offset;
-				ray->dof += 1;
-			}
-		}	
+    return (r << 24 | g << 16 | b << 8 | a);
 }
 
+// for raycaster need to adjust width and height after window resize
+// mlx_delete_image
+// side_dist - distance until the wall (I supose)
+// draw floor and ceiling (splitting the window in half and draw the respective color)
+// mlx_resize_hook - resize the window after first raycast
+
+ 
+
+// void raycaster(t_game *game, t_ray * ray)
+// {
+// 	int ray_num = 0;
+
+// 	while (ray_num < WIDTH)
+// 	{
+// 		init_ray(ray, game->player, ray_num);
+// 		calculate_offset(ray);
+// 		measure_distance_to_wall(ray, game->map);
+// 		get_wall_height(ray);
+// 		draw_wall(ray, game);
+// 	}
+// }
+// void check_horizontal(t_ray *ray, t_player *player, t_map_file_data *mfd)
+// {
+// }
 
 
-void check_horizontal(t_ray *ray, t_player *player, int *map)
-{
-		ray->dof = 0;
-		float aTan = -1 / tan(ray->dir);
-		if (ray->dir > PI) // ray facing down
-		{
-			ray->y = (((int)player->y / TILE_SIZE) * TILE_SIZE) - EPSILON;
-			ray->x = (player->y - ray->y) * aTan + player->x;
-			ray->y_offset = -TILE_SIZE;
-			ray->x_offset = ray->y_offset * aTan;
-		}
-		else if (ray->dir < PI) // ray facing up
-		{
-			ray->y = (((int)player->y / TILE_SIZE) * TILE_SIZE) + TILE_SIZE;
-			ray->x = (player->y - ray->y) * aTan + player->x;
-			ray->y_offset = TILE_SIZE;
-			ray->x_offset = ray->y_offset * aTan;
-		}
-		else // ray facing right or left
-		{
-			ray->x = player->x;
-			ray->y = player->y;
-			ray->dof = MAX_DOF;
-		}
-		perform_dda(ray, map);
-}
-
-void check_vertical(t_ray *ray, t_player *player, int *map)
-{
-		ray->dof = 0;
-		float nTan = -tan(ray->dir);
-		if (ray->dir > PI_2 && ray->dir < (PI + PI_2)) // ray facing left
-		{
-			ray->x = (((int)player->x / TILE_SIZE) * TILE_SIZE) - EPSILON;
-			ray->y = (player->x - ray->x) * nTan + player->y;
-			ray->x_offset = -TILE_SIZE;
-			ray->y_offset = ray->x_offset * nTan;
-		}
-		else if (ray->dir < PI_2 || ray->dir > (PI + PI_2)) // ray facing right
-		{
-			ray->x = (((int)player->x / TILE_SIZE) * TILE_SIZE) + TILE_SIZE;
-			ray->y = (player->x - ray->x) * nTan + player->y;
-			ray->x_offset = TILE_SIZE;
-			ray->y_offset = ray->x_offset * nTan;
-		}
-		else  // ray facing up or dwon
-		{
-			ray->x = player->x;
-			ray->y = player->y;
-			ray->dof = MAX_DOF;
-		}
-		perform_dda(ray, map);
-		
-}
-
-float shortest_distance(t_ray *ray, t_player *player)
-{
-	float h_dist = sqrt((ray->x - player->x) * (ray->x - player->x) + (ray->y - player->y) * (ray->y - player->y));
-	float v_dist = sqrt((ray->x - player->x) * (ray->x - player->x) + (ray->y - player->y) * (ray->y - player->y));
-	if (h_dist < v_dist)
-		return (h_dist);
-	else
-		return (v_dist);
-}
-
-
-
-void raycaster(t_player *player, t_ray *ray, int *map)
-{
+// void measure_distance_to_wall(t_ray *ray, t_game *game)
+// {
 	
-	check_horizontal(ray, player, map);
-	check_vertical(ray, player, map);
-	draw_walls(player, ray);
-	
-}
+// }
 
+
+void draw_floor_and_ceiling(t_game *game)
+{
+	int x;
+	int y;
+	int floor_color;
+	int ceiling_color;
+	
+
+	floor_color = get_rgba(39, 245, 236, 255);
+	ceiling_color = get_rgba(245, 121, 3, 255);
+
+	x = 0;
+	
+	while (x < WIDTH)
+	{
+		y = 0;
+		while (y < HEIGHT / 2)
+		{
+			mlx_put_pixel(game->background, x, y, ceiling_color);
+			y++;
+		}
+		y = HEIGHT / 2;
+		while (y < HEIGHT)
+		{
+			mlx_put_pixel(game->background, x, y, floor_color);
+			y++;
+		}
+		x++;
+	}
+}
 
 int main()
 {
@@ -116,11 +87,20 @@ int main()
 	init_game(game, "map.cub");
 	
 	
+	draw_floor_and_ceiling(game);
+	if (mlx_image_to_window(game->mlx, game->background, 0, 0) == -1)
+	{
+		printf("Error\nFailed to draw image\n");
+		exit(1);
+	}
+	mlx_set_setting(MLX_STRETCH_IMAGE, 1);    // stretch image based on window size changing
 	draw_map(game);
+	
+	// raycaster(game->player, game->ray, game->map, game);
 	mlx_loop_hook(game->mlx, key_hooks, game);
 	mlx_loop_hook(game->mlx, update_player, game);
     mlx_loop(game->mlx);
     mlx_terminate(game->mlx);
-	raycaster(game->player, game->ray, game->map);
+	
 	return (0);
 }
