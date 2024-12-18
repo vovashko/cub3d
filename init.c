@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/13 15:49:53 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/18 18:31:18 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,16 +121,23 @@ void	init_game(t_game *game, char *map_file)
 #endif
 
 	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
-	ray->x = game->player->x;
-	ray->y = game->player->y;
-	ray->dir = game->player->dir;
-	ray->x_offset = 0;
-	ray->y_offset = 0;
-	ray->map_x = 0;
-	ray->map_y = 0;
-	ray->map_pos = 0;
-	ray->dof = 0;
+	ray->slice = WIDTH;
+	ray->shift_factor = game->player->fov / WIDTH;
+	ray->x = 0;
+	ray->y = 0;
+	ray->delta_x = 0;
+	ray->delta_y = 0;
+	ray->dist_x = 0;
+	ray->dist_y = 0;
+	ray->hit_x = 0;
+	ray->hit_y = 0;
+	ray->x_dir = 0;
+	ray->y_dir = 0;
+	ray->hit_distance = 0;
+	ray->hit_portion = 0;
 	game->ray = ray;
+
+	
 	
 }
 

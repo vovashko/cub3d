@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/13 16:21:43 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/18 18:33:04 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 
 #define WIDTH 800
 #define HEIGHT 600
-#define TEST_MODE 2
+#define TEST_MODE 0
 #define MAX_DOF 8
 
 typedef struct s_color
@@ -63,25 +63,20 @@ typedef struct s_map_file_data
 
 
 typedef struct s_ray {
-    int ray_num;         // Ray number
-    int map_x;           // Map grid x-coordinate
-    int map_y;           // Map grid y-coordinate
-    int map_pos;         // Map array position
-    int dof;             // Depth of field
-    int hit;             // 1 if a wall is hit, 0 otherwise
-    int hit_orientation; // 0 for horizontal, 1 for vertical
-    float x;             // Current ray x-coordinate
-    float y;             // Current ray y-coordinate
-    float h_x;           // Horizontal hit x-coordinate
-    float h_y;           // Horizontal hit y-coordinate
-    float v_x;           // Vertical hit x-coordinate
-    float v_y;           // Vertical hit y-coordinate
-    float dir;           // Ray angle
-    float x_offset;      // Offset for stepping x
-    float y_offset;      // Offset for stepping y
-    float h_dist;        // Distance to horizontal hit
-    float v_dist;        // Distance to vertical hit
-    float texture_offset; // Offset for texturing
+    int slice;         // Ray slice (column)
+    float shift_factor; // FOV shift factor for each slice
+    float x;           // Ray x direction
+    float y;           // Ray y direction
+    float delta_x;     // Step size in x-direction
+    float delta_y;     // Step size in y-direction
+    float dist_x;      // Distance to next x gridline
+    float dist_y;      // Distance to next y gridline
+    int hit_x;         // Map x position of wall hit
+    int hit_y;         // Map y position of wall hit
+    int x_dir;         // Direction of step in x (-1 or 1)
+    int y_dir;         // Direction of step in y (-1 or 1)
+    float hit_distance; // Final distance to the wall hit
+    float hit_portion;  // Texture alignment
 } t_ray;
 
 
