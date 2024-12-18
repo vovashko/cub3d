@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/13 15:49:53 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/18 15:15:11 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void	init_game(t_game *game, char *map_file)
 	ray->map_x = 0;
 	ray->map_y = 0;
 	ray->map_pos = 0;
-	ray->dof = 0;
+	ray->hit_distance = 1000000000000;
 	game->ray = ray;
 	
 }
