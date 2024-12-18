@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/13 16:21:43 by vshkonda      ########   odam.nl         */
+/*   Updated: 2024/12/18 14:20:03 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 
 #define WIDTH 800
 #define HEIGHT 600
-#define TEST_MODE 2
+#define TEST_MODE 0
 #define MAX_DOF 8
 
 typedef struct s_color
@@ -61,30 +61,27 @@ typedef struct s_map_file_data
 	char **map;
 } t_map_file_data;
 
-
-typedef struct s_ray {
-    int ray_num;         // Ray number
-    int map_x;           // Map grid x-coordinate
-    int map_y;           // Map grid y-coordinate
-    int map_pos;         // Map array position
-    int dof;             // Depth of field
-    int hit;             // 1 if a wall is hit, 0 otherwise
-    int hit_orientation; // 0 for horizontal, 1 for vertical
-    float x;             // Current ray x-coordinate
-    float y;             // Current ray y-coordinate
-    float h_x;           // Horizontal hit x-coordinate
-    float h_y;           // Horizontal hit y-coordinate
-    float v_x;           // Vertical hit x-coordinate
-    float v_y;           // Vertical hit y-coordinate
-    float dir;           // Ray angle
-    float x_offset;      // Offset for stepping x
-    float y_offset;      // Offset for stepping y
-    float h_dist;        // Distance to horizontal hit
-    float v_dist;        // Distance to vertical hit
-    float texture_offset; // Offset for texturing
+typedef struct s_ray
+{
+	int ray_num;
+	int map_x; // map x
+	int map_y; // map y
+	int map_pos; // map position
+	float x;   // ray x
+	float y;	// ray y
+	float dir;   // ray angle
+	float x_offset;	// x offset
+	float y_offset;	// y offset
+	float hit_distance;
+	float hit_x;
+	float hit_y;
 } t_ray;
 
+typedef struct s_render {
+	t_ray *ray;
+	mlx_image_t *image;
 
+} t_render;
 
 typedef struct s_player
 {
@@ -136,7 +133,8 @@ bool is_surrounded_by_walls_or_spaces(char **map, size_t x, int y, int rows, siz
 bool check_top_and_bottom(char *line);
 bool check_valid_chars(char **map, int rows);
 bool check_starting_pos(char **map, int rows, t_player *player);
-
+void draw_floor_and_ceiling(t_game *game);
+int get_rgba(int r, int g, int b, int a);
 
 
 
