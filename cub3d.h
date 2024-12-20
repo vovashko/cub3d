@@ -113,7 +113,7 @@ void key_hooks(void *params);
 void update_player(void *params);
 void draw_map(t_game *game);
 void free_mfd(t_map_file_data *mfd);
-bool map_check(t_map_file_data *mfd, t_player *player);
+// bool map_check(t_map_file_data *mfd, t_player *player);
 void skip_spaces(char *line, int *i);
 void handle_error(char *error);
 void free_map(char **map, int rows);
@@ -123,19 +123,33 @@ void get_map(t_map_file_data *mfd);
 bool check_file_content(t_map_file_data *mfd);
 void get_color(char *line, t_color *color);
 int verify_color(char *line, int *i);
-bool check_color_range(t_color *color);
+// bool check_color_range(t_color *color);
 bool confirm_data_from_mfd(t_map_file_data *mfd);
 char *skip_to_map(int fd);
 size_t get_map_width(char **map, int rows);
-char **normalize_map(char **map, int rows, size_t cols);
+// char **normalize_map(char **map, int rows, size_t cols);
 bool check_enclosure(char **map, int rows, size_t cols);
-bool is_surrounded_by_walls_or_spaces(char **map, size_t x, int y, int rows, size_t cols);
+// bool is_surrounded_by_walls_or_spaces(char **map, size_t x, int y, int rows, size_t cols);
 bool check_top_and_bottom(char *line);
 bool check_valid_chars(char **map, int rows);
-bool check_starting_pos(char **map, int rows, t_player *player);
+// bool check_starting_pos(char **map, int rows, t_player *player);
 void draw_floor_and_ceiling(t_game *game);
 int get_rgba(int r, int g, int b, int a);
 
-
+// Adding new function references
+void handle_error(char *error);
+char *skip_spaces(char *line);
+void parse_config_line(t_map_file_data *mfd, char *line);
+bool ft_isspace(char c);
+int get_max_width(char **map);
+bool is_empty_row(char *row);
+bool is_row_enclosed(char *row, int row_index);
+bool validate_edge_gaps(char *curr_row, char *adjacent_row, int is_top, int row_index);
+bool validate_middle_row_gaps(char *curr_row, char *row_on_top, char *row_on_bottom, int row_index);
+bool validate_player_presence(char **map, t_player *player);
+bool validate_map_enclosure(char **map);
+bool check_file_content(t_map_file_data *mfd);
+bool check_colours_range(t_color *color);
+bool validate_map(t_map_file_data *mfd, t_player *player);
 
 #endif
