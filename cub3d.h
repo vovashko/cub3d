@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/18 18:33:04 by vovashko      ########   odam.nl         */
+/*   Updated: 2024/12/20 20:27:49 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ typedef struct s_ray {
     int y_dir;         // Direction of step in y (-1 or 1)
     float hit_distance; // Final distance to the wall hit
     float hit_portion;  // Texture alignment
+	char hit_orientation; // Orientation of the wall hit
 } t_ray;
 
 

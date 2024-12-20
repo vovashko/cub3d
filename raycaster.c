@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 17:23:51 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/18 18:35:11 by vovashko      ########   odam.nl         */
+/*   Updated: 2024/12/20 20:29:28 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,33 +104,74 @@ void calculate_ray_data(t_ray *ray, t_player *player, float shift_factor) {
     }
 }
 
-void perform_dda(t_ray *ray, int **map) {
+int get_map_value(int *map, int x, int y) {
+    return map[y * 10 + x]; // Assuming map width is 10
+}
+
+void perform_dda(t_ray *ray, int *map) {
     while (1) {
-        if (ray->dist_x < ray->dist_y) {
+       if (ray->dist_x < ray->dist_y) {
             ray->dist_x += ray->delta_x;
             ray->hit_x += ray->x_dir;
+
+            // Check if the ray is hitting an east or west wall
+            ray->hit_orientation = (ray->x_dir > 0) ? 'E' : 'W';
         } else {
             ray->dist_y += ray->delta_y;
             ray->hit_y += ray->y_dir;
+
+            // Check if the ray is hitting a north or south wall
+            ray->hit_orientation = (ray->y_dir > 0) ? 'S' : 'N';
         }
-        if (map[ray->hit_y][ray->hit_x] == 1) { // Wall hit
+        if (get_map_value(map, ray->hit_x, ray->hit_y) == 1) { // Wall hit
             ray->hit_distance = (ray->dist_x < ray->dist_y) ? ray->dist_x : ray->dist_y;
             break;
         }
     }
 }
 
-void draw_wall_slice(t_ray *ray, t_game *game) {
+void draw_wall_slice_with_floor_and_ceiling(t_ray *ray, t_game *game) {
+    int ceiling_end, floor_start;
     float wall_height = HEIGHT / ray->hit_distance;
-    int draw_start = (HEIGHT / 2) - (wall_height / 2);
-    int draw_end = (HEIGHT / 2) + (wall_height / 2);
-    draw_start = draw_start < 0 ? 0 : draw_start;
-    draw_end = draw_end >= HEIGHT ? HEIGHT - 1 : draw_end;
 
-    for (int y = draw_start; y <= draw_end; y++) {
-        mlx_put_pixel(game->background, ray->slice, y, 0x00FF00FF);
+    ceiling_end = (HEIGHT / 2) - (wall_height / 2);
+    floor_start = (HEIGHT / 2) + (wall_height / 2);
+
+    ceiling_end = ceiling_end < 0 ? 0 : ceiling_end;
+    floor_start = floor_start >= HEIGHT ? HEIGHT - 1 : floor_start;
+
+    // Define colors
+    int ceiling_color = get_rgba(245, 121, 3, 255);   // Orange
+    int floor_color = get_rgba(39, 245, 236, 255);    // Cyan
+    int wall_color;
+
+    // Set wall color based on orientation
+    switch (ray->hit_orientation) {
+        case 'N': wall_color = get_rgba(255, 0, 0, 255); break; // Red for north
+        case 'S': wall_color = get_rgba(0, 255, 0, 255); break; // Green for south
+        case 'E': wall_color = get_rgba(0, 0, 255, 255); break; // Blue for east
+        case 'W': wall_color = get_rgba(255, 255, 0, 255); break; // Yellow for west
+        default: wall_color = get_rgba(255, 255, 255, 255); break; // White as fallback
+    }
+
+    // Draw ceiling
+    for (int y = 0; y < ceiling_end; y++) {
+        mlx_put_pixel(game->background, ray->slice, y, ceiling_color);
+    }
+
+    // Draw wall slice
+    for (int y = ceiling_end; y <= floor_start; y++) {
+        mlx_put_pixel(game->background, ray->slice, y, wall_color);
+    }
+
+    // Draw floor
+    for (int y = floor_start + 1; y < HEIGHT; y++) {
+        mlx_put_pixel(game->background, ray->slice, y, floor_color);
     }
 }
+
+
+
 
 void raycaster(void *params) {
 	t_game *game = (t_game *)params;
@@ -140,11 +181,12 @@ void raycaster(void *params) {
     ray->shift_factor = FOV / WIDTH;
 
     while (ray->slice--) {
-        calculate_ray_data(ray, game->player, ray->shift_factor);
-        perform_dda(ray, &game->map);
-        draw_wall_slice(ray, game);
-        ray->shift_factor -= FOV / WIDTH;
+    calculate_ray_data(ray, game->player, ray->shift_factor);
+    perform_dda(ray, game->map);
+    draw_wall_slice_with_floor_and_ceiling(ray, game);
+    ray->shift_factor -= FOV / WIDTH;
     }
+
 }
 
 int main()
