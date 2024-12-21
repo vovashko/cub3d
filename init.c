@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/18 18:31:18 by vovashko      ########   odam.nl         */
+/*   Updated: 2024/12/20 20:42:25 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	init_game(t_game *game, char *map_file)
 		exit(1);
 	}
 
-	// game->player->player_img->enabled = false;
+	game->player->player_img->enabled = false;
 
 	game->wall = mlx_texture_to_image(game->mlx,
 			mlx_load_png("textures/west.png"));
@@ -87,8 +87,8 @@ void	init_game(t_game *game, char *map_file)
 		printf("Error\nFailed to resize image\n");
 		exit(1);
 	}
-	game->player->x = 5 * TILE_SIZE;
-	game->player->y = 5 * TILE_SIZE;
+	game->player->x = 2 * TILE_SIZE;
+	game->player->y = 2 * TILE_SIZE;
 	game->player->dir = 0;
 	game->player->dx = cos(game->player->dir) * 5;
 	game->player->dy = sin(game->player->dir) * 5;
@@ -103,10 +103,10 @@ void	init_game(t_game *game, char *map_file)
 	int map[100] = {
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 1, 1, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 1, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
