@@ -37,7 +37,7 @@ void free_player(t_player *player)
 	free(player);
 }
 
-
+/*
 int main (int argc, char **argv)
 {
 	
@@ -97,7 +97,7 @@ int main (int argc, char **argv)
 	free(game);
     return (0);
 }
-
+*/
 
 // Adding my main, for checking purposes to call my parsing and validation functions
 /*
@@ -123,23 +123,26 @@ int main (int argc, char **argv)
 //     }
 // }
 
+*/
 int main(int argc, char **argv)
 {
-    t_map_file_data mfd = {0};
-    t_player player = {0};
+    // t_map_file_data mfd = {0};
+    // t_player player = {0};
 
     if (argc != 2)
     {
         fprintf(stderr, "Usage: ./cub3d <map.cub>\n");
         return EXIT_FAILURE;
     }
+	t_game* game = (t_game *)malloc(sizeof(t_game));
+    init_game(game, argv[1]);
 
-    int fd = open(argv[1], O_RDONLY);
+    // int fd = open(argv[1], O_RDONLY);
     // printf("open file fd is: %d\n", fd);
-    get_map_height(&mfd, fd);
-    // printf("map height: %d\n", mfd.height);
-    fd = open(argv[1], O_RDONLY);
-    get_file_data(&mfd, fd);
+    // get_map_height(&mfd, fd);
+    // // printf("map height: %d\n", mfd.height);
+    // fd = open(argv[1], O_RDONLY);
+    // get_file_data(&mfd, fd);
     // print_map(mfd.map);
     // int i = 1;
     // while (mfd.map[i])
@@ -148,11 +151,11 @@ int main(int argc, char **argv)
     //     i++;
     // }
 
-    if (!validate_map(&mfd, &player))
+    if (!validate_map(game->mfd, game->player))
     {
         // printf("we are here\n");
         printf("Map validation failed.\n");
-        free_mfd(&mfd);
+        free_mfd(game->mfd);
         return EXIT_FAILURE;
     }
 
@@ -163,10 +166,8 @@ int main(int argc, char **argv)
     // print_map(mfd.map);
 
     // Free allocated memory
-    free_mfd(&mfd);
+    free_mfd(game->mfd);
 
     return EXIT_SUCCESS;
 }
 
-
-*/

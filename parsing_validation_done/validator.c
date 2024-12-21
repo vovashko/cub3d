@@ -59,7 +59,8 @@ bool validate_edge_gaps(char *curr_row, char *adjacent_row, int is_top, int row_
     for (int j = 1; j < curr_len - 1; j++)
     {
         if ((curr_row[j] == ' ' &&
-            adjacent_row && adjacent_row[j] != '1' && adjacent_row[j] != ' ' && curr_len <= adjacent_len) || ft_strchr("SWEN0", curr_row[j])) // added length check, because in maps/good/test_whitespace.cub, the rows end with spaces that would twist the results
+             adjacent_row && adjacent_row[j] != '1' && adjacent_row[j] != ' ' && curr_len <= adjacent_len) ||
+            ft_strchr("SWEN0", curr_row[j])) // added length check, because in maps/good/test_whitespace.cub, the rows end with spaces that would twist the results
         {
             // leaving the line below for now, for easier debugging if needed, but eventually will be a handle_error call
             fprintf(stderr, "Error: Gap in %s row is not supported by adjacent rows at row %d, column %d.\n",
@@ -81,13 +82,13 @@ bool validate_middle_row_gaps(char *curr_row, char *row_on_top, char *row_on_bot
     {
         if (curr_row[j] == ' ')
         {
-            char above = (j < top_len - 2) ? row_on_top[j] : ' '; // minus 2 to get rid of NULL and '\n' at the end of line
-            char below = (j < bottom_len - 2) ? row_on_bottom[j] : ' '; //same here
+            char above = (j < top_len - 2) ? row_on_top[j] : ' ';       // minus 2 to get rid of NULL and '\n' at the end of line
+            char below = (j < bottom_len - 2) ? row_on_bottom[j] : ' '; // same here
 
             if ((above != '1' && above != ' ' && above != '\n' && above != '0') ||
                 (below != '1' && below != ' ' && below != '\n' && below != '0'))
             {
-                handle_error("Invalid gap in middle row at row %d, column %d.\n", row_index, j);
+                fprintf(stderr, "Invalid gap in middle row at row %d, column %d.\n", row_index, j);
                 return false;
             }
         }
@@ -187,7 +188,7 @@ bool validate_map_enclosure(char **map)
     return true; // Map is valid
 }
 
-//Validate file content
+// Validate file content
 bool check_file_content(t_map_file_data *mfd)
 {
     if (!mfd->north_texture || !mfd->south_texture ||
@@ -205,7 +206,7 @@ bool check_file_content(t_map_file_data *mfd)
     return true;
 }
 
-//Validate colours range
+// Validate colours range
 bool check_colours_range(t_color *color)
 {
     if (color == NULL)

@@ -73,17 +73,17 @@ void get_map_height(t_map_file_data *mfd, int fd)
     mfd->height = height;
 }
 
-void free_mfd(t_map_file_data *mfd)
-{
-    if (mfd->map)
-        free_map(mfd->map, mfd->height);
-    free(mfd->floor_color);
-    free(mfd->ceiling_color);
-    free(mfd->north_texture);
-    free(mfd->south_texture);
-    free(mfd->west_texture);
-    free(mfd->east_texture);
-}
+// void free_mfd(t_map_file_data *mfd)
+// {
+//     if (mfd->map)
+//         free_map(mfd->map, mfd->height);
+//     free(mfd->floor_color);
+//     free(mfd->ceiling_color);
+//     free(mfd->north_texture);
+//     free(mfd->south_texture);
+//     free(mfd->west_texture);
+//     free(mfd->east_texture);
+// }
 
 static void grow_map(t_map_file_data *mfd, char *line)
 {
@@ -132,38 +132,57 @@ void get_color(char *line, t_color *color)
     char *trimmed_line = skip_spaces(line);
     int i = 0;
 
-    // Parse the red component
-    color->r = ft_atoi(&trimmed_line[i]);
-    // printf("red = %d\n", color->r);
-    while (trimmed_line[i] && ft_isdigit(trimmed_line[i]))
-        i++;
-    if (trimmed_line[i++] != ',')
-        handle_error("Invalid color format: expected ',' after red component");
+    if (color->r == -1)
+    {
 
-    // Parse the green component
-    trimmed_line = skip_spaces(&trimmed_line[i]);
-    i = 0;
-    color->g = ft_atoi(&trimmed_line[i]);
-    // printf("green = %d\n", color->g);
-    while (trimmed_line[i] && ft_isdigit(trimmed_line[i]))
-        i++;
-    if (trimmed_line[i++] != ',')
-        handle_error("Invalid color format: expected ',' after green component");
-
-    // Parse the blue component
-    trimmed_line = skip_spaces(&trimmed_line[i]);
-    i = 0;
-    color->b = ft_atoi(&trimmed_line[i]);
-    // printf("blue = %d\n", color->b);
-    while (trimmed_line[i] && ft_isdigit(trimmed_line[i]))
-        i++;
-    // Validate that there are no trailing invalid characters
-    if (!ft_strncmp(trimmed_line, "\n", 2))
-        handle_error("Invalid color format: unexpected characters after blue component");
+        // Parse the red component
+        color->r = ft_atoi(&trimmed_line[i]);
+        // printf("red = %d\n", color->r);
+        while (trimmed_line[i] && ft_isdigit(trimmed_line[i]))
+            i++;
+        if (trimmed_line[i++] != ',')
+            handle_error("Invalid color format: expected ',' after red component");
+    }
+    if (color->g == -1)
+    {
+        // Parse the green component
+        trimmed_line = skip_spaces(&trimmed_line[i]);
+        i = 0;
+        color->g = ft_atoi(&trimmed_line[i]);
+        // printf("green = %d\n", color->g);
+        while (trimmed_line[i] && ft_isdigit(trimmed_line[i]))
+            i++;
+        if (trimmed_line[i++] != ',')
+            handle_error("Invalid color format: expected ',' after green component");
+    }
+    if (color->b == -1)
+    {
+        // Parse the blue component
+        trimmed_line = skip_spaces(&trimmed_line[i]);
+        i = 0;
+        color->b = ft_atoi(&trimmed_line[i]);
+        // printf("blue = %d\n", color->b);
+        while (trimmed_line[i] && ft_isdigit(trimmed_line[i]))
+            i++;
+        // Validate that there are no trailing invalid characters
+        if (!ft_strncmp(trimmed_line, "\n", 2))
+            handle_error("Invalid color format: unexpected characters after blue component");
+    }
 
     // Ensure that the color values are within the valid range [0, 255]
     if (!check_colours_range(color))
         handle_error("Color values out of range [0-255]");
+}
+
+static char *check_and_assign_texture(char *texture, char *trimmed_line)
+{
+    if (texture == NULL)
+        return (trimmed_line);
+    else
+    {
+        handle_error("Texture already exists and no duplicated are allowed");
+        return NULL;
+    }
 }
 
 // Parses a configuration line for textures or colors
@@ -173,37 +192,22 @@ void parse_config_line(t_map_file_data *mfd, char *line)
     char *trimmed_line = skip_spaces(line);
 
     if (ft_strncmp(trimmed_line, "NO ", 3) == 0) // North texture
-        mfd->north_texture = ft_strdup(skip_spaces(&trimmed_line[3]));
+        mfd->north_texture = ft_strdup(check_and_assign_texture(mfd->north_texture, skip_spaces(&trimmed_line[3])));
     else if (ft_strncmp(trimmed_line, "SO ", 3) == 0) // South texture
-        mfd->south_texture = ft_strdup(skip_spaces(&trimmed_line[3]));
+        mfd->south_texture = ft_strdup(check_and_assign_texture(mfd->south_texture, skip_spaces(&trimmed_line[3])));
     else if (ft_strncmp(trimmed_line, "WE ", 3) == 0) // West texture
-        mfd->west_texture = ft_strdup(skip_spaces(&trimmed_line[3]));
+        mfd->west_texture = ft_strdup(check_and_assign_texture(mfd->west_texture, skip_spaces(&trimmed_line[3])));
     else if (ft_strncmp(trimmed_line, "EA ", 3) == 0) // East texture
-        mfd->east_texture = ft_strdup(skip_spaces(&trimmed_line[3]));
+        mfd->east_texture = ft_strdup(check_and_assign_texture(mfd->east_texture, skip_spaces(&trimmed_line[3])));
     else if (ft_strncmp(trimmed_line, "F ", 2) == 0) // Floor color
-    {
-        mfd->floor_color = malloc(sizeof(t_color));
-        if (!mfd->floor_color)
-            handle_error("Failed to allocate memory for floor color");
         get_color(&trimmed_line[2], mfd->floor_color);
-    }
     else if (ft_strncmp(trimmed_line, "C ", 2) == 0) // Ceiling color
-    {
-        mfd->ceiling_color = malloc(sizeof(t_color));
-        if (!mfd->ceiling_color)
-            handle_error("Failed to allocate memory for ceiling color");
         get_color(&trimmed_line[2], mfd->ceiling_color);
-    }
     else
-    {
         handle_error("Invalid configuration line");
-    }
-
-    // Debug print: Confirm parsed line
-    // printf("Parsed config line: %s\n", trimmed_line);
 }
 
-void get_file_data(t_map_file_data *mfd, int fd)
+bool get_file_data(t_map_file_data *mfd, int fd)
 {
     char *line;
     int map_started = 0;
@@ -224,7 +228,9 @@ void get_file_data(t_map_file_data *mfd, int fd)
                 if (line && trimmed_line && !ft_strchr(trimmed_line, '\n'))
                 {
                     free(line);
+                    free(trimmed_line);
                     handle_error("Empty lines found in map section\n");
+                    return false;
                 }
             }
             free(line);
@@ -248,11 +254,16 @@ void get_file_data(t_map_file_data *mfd, int fd)
         {
             // printf("Error: Invalid line: [%s]\n", trimmed_line);
             handle_error("Invalid line encountered");
+            return false;
         }
 
         free(line);
     }
 
     if (!map_started)
+    {
         handle_error("Map section not found");
+        return false;
+    }
+    return true;
 }
