@@ -1,7 +1,7 @@
 #include "cub3d.h"
 // Adding my main, for checking purposes to call my parsing and validation functions
-/*
-    // static void print_textures_and_colors(const t_map_file_data *mfd)
+
+// static void print_textures_and_colors(const t_map_file_data *mfd)
 // {
 //     printf("Textures:\n");
 //     printf("  North: %s\n", mfd->north_texture);
@@ -23,7 +23,6 @@
 //     }
 // }
 
-*/
 void free_mfd(t_map_file_data *mfd)
 {
     int i;
@@ -65,12 +64,11 @@ int main(int argc, char **argv)
         free_mfd(game->mfd);
         return EXIT_FAILURE;
     }
-
     printf("Map is valid.\n");
 
     // Print textures, colors, and map
-    // print_textures_and_colors(&mfd);
-    // print_map(mfd.map);
+    // print_textures_and_colors(game->mfd);
+    // print_map(game->mfd->map);
 
     // Free allocated memory
     free_mfd(game->mfd);
