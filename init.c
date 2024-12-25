@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/20 20:42:25 by vovashko      ########   odam.nl         */
+/*   Updated: 2024/12/25 20:47:13 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,10 @@ void	init_game(t_game *game, char *map_file)
 	int map[100] = {
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 1, 1, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 1, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -122,7 +122,7 @@ void	init_game(t_game *game, char *map_file)
 
 	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
 	ray->slice = WIDTH;
-	ray->shift_factor = game->player->fov / WIDTH;
+	ray->shift_factor = FOV_FACTOR;
 	ray->x = 0;
 	ray->y = 0;
 	ray->delta_x = 0;
@@ -133,7 +133,6 @@ void	init_game(t_game *game, char *map_file)
 	ray->hit_y = 0;
 	ray->x_dir = 0;
 	ray->y_dir = 0;
-	ray->hit_distance = 0;
 	ray->hit_portion = 0;
 	game->ray = ray;
 

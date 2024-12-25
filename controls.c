@@ -6,11 +6,13 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:03:16 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/20 20:39:53 by vovashko      ########   odam.nl         */
+/*   Updated: 2024/12/25 21:39:42 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void render(void *param);
 
 static void turn_controls(t_game *game)
 {
@@ -41,7 +43,6 @@ void key_hooks(void *params)
 	{
 		game->player->y += game->player->dy;
 		game->player->x += game->player->dx;
-		printf("Player position: (%f, %f)\n", game->player->x, game->player->y);
 	}
     if (mlx_is_key_down(game->mlx, MLX_KEY_S))
 	{
@@ -57,6 +58,10 @@ void key_hooks(void *params)
 	{
 		game->player->x += game->player->dy;
 		game->player->y -= game->player->dx;
+	}
+	if (mlx_is_key_down(game->mlx, MLX_KEY_R))
+	{
+		render(game);
 	}
 	turn_controls(game);
 }
