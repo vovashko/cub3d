@@ -79,38 +79,41 @@ int get_map_value(int *map, int x, int y) {
 }
 
 void perform_dda(t_ray *ray, int *map, int slice, t_player *player) {
+    int hor = 0;
+    
     while (1) {
         if (ray->dist_x < ray->dist_y) {
             ray->dist_x += ray->delta_x;
             ray->hit_x += ray->x_dir;
-
-            // Update hit orientation for vertical walls (east or west)
-            ray->hit_orientation = (ray->x_dir > 0) ? 'E' : 'W';
+            hor = 1;
         } else {
             ray->dist_y += ray->delta_y;
             ray->hit_y += ray->y_dir;
-
-            // Update hit orientation for horizontal walls (north or south)
-            ray->hit_orientation = (ray->y_dir > 0) ? 'S' : 'N';
         }
 
         // Check if the ray hits a wall
         if (get_map_value(map, ray->hit_x, ray->hit_y) == 1) {
-            // Calculate hit distance based on which axis was crossed last
             break;
         }
     }
-    if (ray->dist_x < ray->dist_y) 
-        {
-            ray->hit_distance[slice] = (ray->hit_x - player->x) * ray->x_dir;
-            ray->hit_portion = player->y + ray->hit_distance[slice] * ray->y;
-        } 
-    else 
-        {
-            ray->hit_distance[slice] = (ray->hit_y - player->y) * ray->y_dir;
-            ray->hit_portion = player->x + ray->hit_distance[slice] * ray->x;
-        }
+    if (hor == 0)
+    {
+            ray->hit_distance[slice] = (ray->hit_x - player->x + (1 - ray->x_dir)) / ray->x;
+        if (ray->x_dir == -1)
+            ray->hit_orientation = 'W';
+        else
+            ray->hit_orientation = 'E';
+    }
+    else
+    {
+        ray->hit_distance[slice] = (ray->hit_y - player->y + (1 - ray->y_dir)) / ray->y;
+        if (ray->y_dir == -1)
+            ray->hit_orientation = 'N';
+        else
+            ray->hit_orientation = 'S';
+    }
 }
+
 
 void render(void *param) {
     uint32_t x;
@@ -123,8 +126,9 @@ void render(void *param) {
     while (x--) {
         calculate_ray_data(game->ray, game->player);
         perform_dda(game->ray, game->map, x, game->player);
+        printf("Ray %d: angle = %f, x = %f, y = %f\n", x, game->ray->angle, game->ray->x, game->ray->y);
         draw_wall_slice(game, x, game->ray);
-        game->ray->shift_factor -= 2.0 * FOV_FACTOR / (WIDTH - 1.0);
+        game->ray->shift_factor -= FOV_FACTOR / WIDTH;
     }
 }
 
@@ -147,7 +151,7 @@ int main()
     render(game);
 	mlx_loop_hook(game->mlx, key_hooks, game);
 	mlx_loop_hook(game->mlx, update_player, game);
-	mlx_loop_hook(game->mlx, render, game);
+	// mlx_loop_hook(game->mlx, render, game);
     mlx_loop(game->mlx);
     mlx_terminate(game->mlx);
 	
