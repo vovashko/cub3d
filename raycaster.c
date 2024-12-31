@@ -20,43 +20,135 @@ int get_textured_color(char orientation) {
     return base_color;
 }
 
-void draw_wall_slice(t_game *game, int x, t_ray *ray) {
-    
-    ray->slice_height = (int)((double)HEIGHT / ray->hit_distance[x]);
-    ray->texture_x = (int)(ray->hit_portion * TILE_SIZE);
-    if (ray->slice_height > HEIGHT)
-        ray->slice_height = HEIGHT;
-    
-    int i = 0;
-    int ceiling_end = (HEIGHT - ray->slice_height) / 2;
-    int floor_start = (HEIGHT + ray->slice_height) / 2;
-    ceiling_end = ceiling_end < 0 ? 0 : ceiling_end;
-    floor_start = floor_start >= HEIGHT ? HEIGHT - 1 : floor_start;
+// void	color_pixel(mlx_image_t *image, uint32_t x, uint32_t y, uint32_t color)
+// {
+// 	uint32_t	*pixel;
+
+// 	if (!image || x >= image->width || y >= image->height)
+// 		return ;
+// 	pixel = (uint32_t *)image->pixels;
+// 	pixel[y * image->width + x] = color;
+// }
+
+// void zoom_in (t_game *data, t_ray *ray, int x)
+// {
+//     uint32_t start;
+//     double ratio;
+//     uint32_t i;
+//     uint32_t color;
+
+//     start = ((double)ray->slice_height - HEIGHT) * TILE_SIZE / ray->slice_height / 2;
+//     ratio = (double)TILE_SIZE / ray->slice_height;
+//     (void)ratio;
+//     (void)start;
+//     i = 0;
+//     while (i < HEIGHT)
+//     {
+//         color = get_textured_color(ray->hit_orientation);
+// 		color_pixel(data->background, x, i++, color);
+//     }
+// }
+
+// static void	zoom_out(t_game *data, t_ray *ray, int x)
+// {
+// 	uint32_t	rest;
+// 	double		ratio;
+// 	uint32_t	i;
+// 	uint32_t	color;
+//     int ceiling_color = get_rgba(245, 121, 3, 255);   // Orange
+//     int floor_color = get_rgba(39, 245, 236, 255);    // Cyan
+
+// 	rest = (HEIGHT - ray->slice_height) / 2;
+// 	ratio = (double)TILE_SIZE / ray->slice_height;
+//     (void)ratio;
+// 	i = 0;
+// 	while (i < rest)
+// 		color_pixel(data->background, x, i++, ceiling_color);
+// 	while (i < HEIGHT - rest)
+// 	{
+// 		color = get_textured_color(ray->hit_orientation);
+// 		color_pixel(data->background, x, i++, color);
+// 	}
+// 	while (i < HEIGHT)
+// 		color_pixel(data->background, x, i++, floor_color);
+// }
+
+void draw_wall_slice(t_game *game, t_ray *ray) {
     int ceiling_color = get_rgba(245, 121, 3, 255);   // Orange
     int floor_color = get_rgba(39, 245, 236, 255);    // Cyan
+    int wall_color = get_textured_color(ray->hit_orientation);
+    int i = 0;
 
-    while (i < ceiling_end) {
-        mlx_put_pixel(game->background, x, i, ceiling_color);
-        i++;
-    }
-    while (i < floor_start) {
-        mlx_put_pixel(game->background, x, i, get_textured_color(game->ray->hit_orientation));
-        i++;
-    }
-    while (i < HEIGHT) {
-        mlx_put_pixel(game->background, x, i, floor_color);
+    while (i < WIDTH)
+    {
+        if (i < ray->wall_start)
+            mlx_put_pixel(game->background, ray->slice, i, ceiling_color);
+        else if (i >= ray->wall_start && i <= ray->wall_end)
+            mlx_put_pixel(game->background, ray->slice, i, wall_color);
+        else
+            mlx_put_pixel(game->background, ray->slice, i, floor_color);
         i++;
     }
 }
 
-void calculate_ray_data(t_ray *ray, t_player *player) {
-    ray->x = player->dx - player->dy * ray->shift_factor;
-    ray->y = player->dy + player->dx * ray->shift_factor;
-    ray->delta_x = fabs(1 / ray->x);
-    ray->delta_y = fabs(1 / ray->y);
+
+
+int get_map_value(int *map, int x, int y) {
+    return map[y * 10 + x]; // Assuming map width is 10
+}
+
+int perform_dda(t_ray *ray, int *map) {
+    int hor = 0;
+    
+    while (1) {
+        if (ray->dist_x < ray->dist_y) {
+            ray->dist_x += ray->delta_x;
+            ray->hit_x += ray->x_dir;
+            hor = 1;
+        } else {
+            ray->dist_y += ray->delta_y;
+            ray->hit_y += ray->y_dir;
+            hor = 0;
+        }
+        // Check if the ray hits a wall
+        if (get_map_value(map, ray->hit_x, ray->hit_y) == 1) {
+            break;
+        }
+    }
+    return hor;
+}
+
+void calculate_wall_height(t_ray *ray, int hor) {
+    if (hor == 0)
+            ray->hit_distance = ray->dist_x - ray->delta_x;
+    else
+            ray->hit_distance = ray->dist_y - ray->delta_y;
+    ray->slice_height = (uint32_t)((double)HEIGHT / ray->hit_distance);
+    ray->wall_start = HEIGHT / 2 - ray->slice_height / 2;
+    if (ray->wall_start < 0)
+        ray->wall_start = 0;
+    ray->wall_end = ray->slice_height / 2 + HEIGHT / 2;
+    if (ray->wall_end >= HEIGHT)
+        ray->wall_end = HEIGHT - 1;
+    ray->hit_orientation = hor ? (ray->y_dir == 1 ? 'N' : 'S') : (ray->x_dir == 1 ? 'W' : 'E');
+}
+
+void init_ray(t_ray *ray, t_player *player) {
+    ray->camera_x = 2 * ray->slice / (double)WIDTH - 1;
+    ray->x = player->dx - player->dy * ray->camera_x;
+    ray->y = player->dy + player->dx * ray->camera_x;
     ray->hit_x = (int)player->x;
     ray->hit_y = (int)player->y;
 
+    if (ray->y == 0)
+        ray->delta_y = 1e30;
+    else
+        ray->delta_y = fabs(1 / ray->y);
+    if (ray->x == 0)
+        ray->delta_x = 1e30;
+    else
+        ray->delta_x = fabs(1 / ray->x);
+    
     if (ray->x < 0) {
         ray->x_dir = -1;
         ray->dist_x = (player->x - ray->hit_x) * ray->delta_x;
@@ -71,64 +163,26 @@ void calculate_ray_data(t_ray *ray, t_player *player) {
         ray->y_dir = 1;
         ray->dist_y = (ray->hit_y + 1.0 - player->y) * ray->delta_y;
     }
-    
 }
 
-int get_map_value(int *map, int x, int y) {
-    return map[y * 10 + x]; // Assuming map width is 10
-}
+// void calculate_texture(t_game *game, t_ray *ray)
+// {
 
-void perform_dda(t_ray *ray, int *map, int slice, t_player *player) {
-    int hor = 0;
-    
-    while (1) {
-        if (ray->dist_x < ray->dist_y) {
-            ray->dist_x += ray->delta_x;
-            ray->hit_x += ray->x_dir;
-            hor = 1;
-        } else {
-            ray->dist_y += ray->delta_y;
-            ray->hit_y += ray->y_dir;
-        }
+// }
 
-        // Check if the ray hits a wall
-        if (get_map_value(map, ray->hit_x, ray->hit_y) == 1) {
-            break;
-        }
-    }
-    if (hor == 0)
-    {
-            ray->hit_distance[slice] = (ray->hit_x - player->x + (1 - ray->x_dir)) / ray->x;
-        if (ray->x_dir == -1)
-            ray->hit_orientation = 'W';
-        else
-            ray->hit_orientation = 'E';
-    }
-    else
-    {
-        ray->hit_distance[slice] = (ray->hit_y - player->y + (1 - ray->y_dir)) / ray->y;
-        if (ray->y_dir == -1)
-            ray->hit_orientation = 'N';
-        else
-            ray->hit_orientation = 'S';
-    }
-}
-
-
-void render(void *param) {
-    uint32_t x;
+void raycast_and_render(void *param) {
     t_game *game;
+    int hor;
 
     game = param;
-    game->ray->shift_factor = FOV_FACTOR;
-
-    x = WIDTH;
-    while (x--) {
-        calculate_ray_data(game->ray, game->player);
-        perform_dda(game->ray, game->map, x, game->player);
-        printf("Ray %d: angle = %f, x = %f, y = %f\n", x, game->ray->angle, game->ray->x, game->ray->y);
-        draw_wall_slice(game, x, game->ray);
-        game->ray->shift_factor -= FOV_FACTOR / WIDTH;
+    game->ray->slice = WIDTH;
+    // reset_window(game->background);
+    while (game->ray->slice--) 
+    {
+        init_ray(game->ray, game->player);
+        hor = perform_dda(game->ray, game->map);
+        calculate_wall_height(game->ray, hor);
+        draw_wall_slice(game, game->ray);
     }
 }
 
@@ -146,14 +200,10 @@ int main()
 		exit(1);
 	}
 	mlx_set_setting(MLX_STRETCH_IMAGE, 1);    // stretch image based on window size changing
-	
-	// raycaster(game->player, game->ray, game->map, game);
-    render(game);
 	mlx_loop_hook(game->mlx, key_hooks, game);
 	mlx_loop_hook(game->mlx, update_player, game);
-	// mlx_loop_hook(game->mlx, render, game);
+	mlx_loop_hook(game->mlx, raycast_and_render, game);
     mlx_loop(game->mlx);
     mlx_terminate(game->mlx);
-	
 	return (0);
 }
