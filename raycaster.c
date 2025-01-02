@@ -79,16 +79,18 @@ void draw_wall_slice(t_game *game, t_ray *ray) {
     int wall_color = get_textured_color(ray->hit_orientation);
     int i = 0;
 
-    while (i < WIDTH)
-    {
-        if (i < ray->wall_start)
-            mlx_put_pixel(game->background, ray->slice, i, ceiling_color);
-        else if (i >= ray->wall_start && i <= ray->wall_end)
-            mlx_put_pixel(game->background, ray->slice, i, wall_color);
-        else
-            mlx_put_pixel(game->background, ray->slice, i, floor_color);
-        i++;
-    }
+   // Draw ceiling
+for (i = 0; i < ray->wall_start; i++)
+    mlx_put_pixel(game->background, ray->slice, i, ceiling_color);
+
+// Draw wall
+for (i = ray->wall_start; i <= ray->wall_end; i++)
+    mlx_put_pixel(game->background, ray->slice, i, wall_color);
+
+// Draw floor
+for (i = ray->wall_end + 1; i < HEIGHT; i++)
+    mlx_put_pixel(game->background, ray->slice, i, floor_color);
+
 }
 
 
@@ -131,14 +133,16 @@ void calculate_wall_height(t_ray *ray, int hor) {
     if (ray->wall_end >= HEIGHT)
         ray->wall_end = HEIGHT - 1;
     ray->hit_orientation = hor ? (ray->y_dir == 1 ? 'N' : 'S') : (ray->x_dir == 1 ? 'W' : 'E');
+    if (ray->hit_distance < 0)
+        ray->hit_distance = 1e30;
 }
 
 void init_ray(t_ray *ray, t_player *player) {
     ray->camera_x = 2 * ray->slice / (double)WIDTH - 1;
-    ray->x = player->dx - player->dy * ray->camera_x;
-    ray->y = player->dy + player->dx * ray->camera_x;
-    ray->hit_x = (int)player->x;
-    ray->hit_y = (int)player->y;
+    ray->x = player->dx + player->plane_x * ray->camera_x;
+    ray->y = player->dy + player->plane_y * ray->camera_x;
+    ray->hit_x = (int)floor(player->x);
+    ray->hit_y = (int)floor(player->y);
 
     if (ray->y == 0)
         ray->delta_y = 1e30;
@@ -175,14 +179,15 @@ void raycast_and_render(void *param) {
     int hor;
 
     game = param;
-    game->ray->slice = WIDTH;
+    game->ray->slice = 0;
     // reset_window(game->background);
-    while (game->ray->slice--) 
+    while (game->ray->slice < WIDTH) 
     {
         init_ray(game->ray, game->player);
         hor = perform_dda(game->ray, game->map);
         calculate_wall_height(game->ray, hor);
         draw_wall_slice(game, game->ray);
+        game->ray->slice++;
     }
 }
 
