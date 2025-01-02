@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/31 12:09:30 by vovashko      ########   odam.nl         */
+/*   Updated: 2025/01/02 13:41:15 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@
 #define RAD 0.01745329251
 #define EPSILON 0.0001
 
-#define WIDTH 400
-#define HEIGHT 200
+#define WIDTH 1200
+#define HEIGHT 800
 #define TEST_MODE 0
 #define MAX_DOF 8
 
@@ -97,6 +97,7 @@ typedef struct s_player
 	float y;
 	float dx;
 	float dy;
+	float view_angle;
 	float plane_x;
 	float plane_y;
 	float fov;
@@ -141,6 +142,7 @@ bool is_surrounded_by_walls_or_spaces(char **map, size_t x, int y, int rows, siz
 bool check_top_and_bottom(char *line);
 bool check_valid_chars(char **map, int rows);
 bool check_starting_pos(char **map, int rows, t_player *player);
+int	get_map_value(int *map, int x, int y);
 
 
 

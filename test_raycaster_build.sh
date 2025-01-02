@@ -1,1 +1,1 @@
-cc raycaster.c init.c drawing.c controls.c parsing_validation/parsing_utils.c -Wall -Wextra -Werror -framework OpenGL -framework IOkit -framework Cocoa -lglfw -L"/opt/homebrew/Cellar/glfw/3.4/lib" -I"/opt/homebrew/Cellar/glfw/3.4/include" -o raycaster -g -I. MLX42/build/libmlx42.a
+cc raycaster.c init.c drawing.c controls.c parsing_validation/parsing_utils.c -o raycaster -Wall -Wextra -Werror -g -ldl -lglfw -pthread -lm MLX42/build/libmlx42.a
