@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/25 20:47:13 by vovashko      ########   odam.nl         */
+/*   Updated: 2024/12/31 12:13:07 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,10 @@ void init_player(t_game *game)
 	#endif
 	game->player->x = -1;
 	game->player->y = -1;
-	game->player->dir = 0;
-	game->player->dx = cos(game->player->dir) * 5;
-	game->player->dy = sin(game->player->dir) * 5;
+	game->player->plane_x = 0;
+	game->player->plane_y = 0.66;
+	game->player->dx = 1;
+	game->player->dy = 0;
 	game->player->fov = PI / 3;
 }
 
@@ -87,11 +88,12 @@ void	init_game(t_game *game, char *map_file)
 		printf("Error\nFailed to resize image\n");
 		exit(1);
 	}
-	game->player->x = 2 * TILE_SIZE;
-	game->player->y = 2 * TILE_SIZE;
-	game->player->dir = 0;
-	game->player->dx = cos(game->player->dir) * 5;
-	game->player->dy = sin(game->player->dir) * 5;
+	game->player->x = 2 + 0.5;
+	game->player->y = 2 + 0.5;
+	game->player->plane_x = 0;
+	game->player->plane_y = 0.66;
+	game->player->dx = 1; // equivalent to 1
+	game->player->dy = 0; // equivalent to 1
 	game->player->fov = PI / 3;
 #endif
 #if TEST_MODE == 2
@@ -102,9 +104,9 @@ void	init_game(t_game *game, char *map_file)
 	game->map = (int *)malloc(sizeof(int) * 100);
 	int map[100] = {
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 0, 1, 0, 0, 0, 0, 0, 0, 1,
+		1, 1, 1, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,

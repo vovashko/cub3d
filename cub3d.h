@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/20 20:27:49 by vovashko      ########   odam.nl         */
+/*   Updated: 2024/12/31 12:09:30 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 #define PI 3.14159265359
 #define PI_2 1.57079632679  
-#define FOV 60
+#define FOV_FACTOR 0.66
 #define TILE_SIZE 64
 #define MAP_WIDTH 10
 #define MAP_HEIGHT 10
@@ -35,8 +35,8 @@
 #define RAD 0.01745329251
 #define EPSILON 0.0001
 
-#define WIDTH 800
-#define HEIGHT 600
+#define WIDTH 400
+#define HEIGHT 200
 #define TEST_MODE 0
 #define MAX_DOF 8
 
@@ -75,9 +75,17 @@ typedef struct s_ray {
     int hit_y;         // Map y position of wall hit
     int x_dir;         // Direction of step in x (-1 or 1)
     int y_dir;         // Direction of step in y (-1 or 1)
-    float hit_distance; // Final distance to the wall hit
+    double hit_distance; // Final distance to the wall hit
     float hit_portion;  // Texture alignment
 	char hit_orientation; // Orientation of the wall hit
+	float angle;        // Angle of the ray
+	u_int32_t slice_height; // Height of the wall slice
+	u_int32_t texture_x; // Texture x coordinate
+	double camera_x;    // Camera x coordinate
+	int wall_start;	 // Start of the wall slice
+	int wall_end;       // End of the wall slice
+
+	
 } t_ray;
 
 
@@ -89,7 +97,8 @@ typedef struct s_player
 	float y;
 	float dx;
 	float dy;
-	float dir;
+	float plane_x;
+	float plane_y;
 	float fov;
 } t_player;
 
