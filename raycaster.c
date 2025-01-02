@@ -128,7 +128,7 @@ int	get_textured_color(t_ray *ray, int x, int y)
 		texture = ray->walls->west;
 		break;
 	default:
-		texture = NULL;
+		texture = ray->walls->north;
 		break;
 	}
 
@@ -139,10 +139,10 @@ int	get_textured_color(t_ray *ray, int x, int y)
 	int32_t b;
 	int32_t a;
 
-	r = texture->pixels[y * texture->width + x];
-	g = texture->pixels[y * texture->width + x + 1];
-	b = texture->pixels[y * texture->width + x + 2];
-	a = texture->pixels[y * texture->width + x + 3];
+	r = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel];
+	g = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel + 1];
+	b = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel + 2];
+	a = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel + 3];
 
 	base_color = get_rgba(r, g, b, a);
 
@@ -164,7 +164,7 @@ void	draw_wall_slice(t_game *game, t_ray *ray)
 
 
 	texture_x = (ray->hit_portion * ray->walls->north->width);
-	scale = ray->walls->north->width / ray->slice_height;
+	scale = (double)ray->walls->north->height / ray->slice_height;
 	tex_pos = (ray->wall_start - HEIGHT / 2 + ray->slice_height / 2) * scale;
 	i = 0;
 	// Draw ceiling
@@ -173,9 +173,9 @@ void	draw_wall_slice(t_game *game, t_ray *ray)
 	// Draw wall
 	for (i = ray->wall_start; i <= ray->wall_end; i++)
 	{
-		texture_y = (int)tex_pos & (ray->walls->north->height - 1);
+		texture_y = (int)tex_pos % (ray->walls->north->height);
+		tex_pos += scale;
 		mlx_put_pixel(game->background, ray->slice, i, get_textured_color(ray, texture_x, texture_y));
-		texture_y++;
 	}
 	// Draw floor
 	for (i = ray->wall_end + 1; i < HEIGHT; i++)
