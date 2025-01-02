@@ -81,7 +81,13 @@ void	calculate_wall_height(t_ray *ray, int hor, t_player *player)
 
 	if (ray->hit_distance < 0)
 		ray->hit_distance = 1e30;
-
+	if	(hor == 0)
+		ray->hit_portion = player->x + ray->hit_distance * ray->hit_x;
+	else
+		ray->hit_portion = player->y + ray->hit_distance * ray->hit_y;
+	ray->hit_portion -= floor(ray->hit_portion);
+	if (ray->hit_orientation == 'W' || ray->hit_orientation == 'S')
+		ray->hit_portion = 1 - ray->hit_portion;
 	ray->slice_height = (int)(HEIGHT / ray->hit_distance);
 	ray->wall_start = HEIGHT / 2 - ray->slice_height / 2;
 	if (ray->wall_start < 0)
@@ -91,6 +97,7 @@ void	calculate_wall_height(t_ray *ray, int hor, t_player *player)
 	{
 		ray->wall_end = HEIGHT - 1;
 	}
+
 }
 
 
@@ -101,47 +108,75 @@ int	get_rgba(int r, int g, int b, int a)
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-int	get_textured_color(char orientation)
+int	get_textured_color(t_ray *ray, int x, int y)
 {
-	int	base_color;
+	mlx_texture_t *texture;
 
 	// Example: Blend the wall orientation color with texture coordinates
-	switch (orientation)
+	switch (ray->hit_orientation)
 	{
 	case 'N':
-		base_color = get_rgba(255, 0, 0, 255);
-		break ; // Red for north
+		texture = ray->walls->north;
+		break;
 	case 'S':
-		base_color = get_rgba(0, 255, 0, 255);
-		break ; // Green for south
+		texture = ray->walls->south;
+		break;
 	case 'E':
-		base_color = get_rgba(0, 0, 255, 255);
-		break ; // Blue for east
+		texture = ray->walls->east;
+		break;
 	case 'W':
-		base_color = get_rgba(255, 255, 0, 255);
-		break ; // Yellow for west
+		texture = ray->walls->west;
+		break;
 	default:
-		base_color = get_rgba(255, 255, 255, 255);
-		break ; // White fallback
+		texture = NULL;
+		break;
 	}
+
+	uint32_t base_color;
+
+	int32_t r;
+	int32_t g;
+	int32_t b;
+	int32_t a;
+
+	r = texture->pixels[y * texture->width + x];
+	g = texture->pixels[y * texture->width + x + 1];
+	b = texture->pixels[y * texture->width + x + 2];
+	a = texture->pixels[y * texture->width + x + 3];
+
+	base_color = get_rgba(r, g, b, a);
+
 	return (base_color);
 }
 
 void	draw_wall_slice(t_game *game, t_ray *ray)
 {
-	int	wall_color;
+	
 	int	i;
 
 	int floor_color = get_rgba(245, 121, 3, 255); // Orange
 	int ceiling_color = get_rgba(39, 245, 236, 255);  // Cyan
-	wall_color = get_textured_color(ray->hit_orientation);
+	int texture_x;
+	int texture_y;
+	double scale;
+	double tex_pos;
+
+
+
+	texture_x = (ray->hit_portion * ray->walls->north->width);
+	scale = ray->walls->north->width / ray->slice_height;
+	tex_pos = (ray->wall_start - HEIGHT / 2 + ray->slice_height / 2) * scale;
 	i = 0;
 	// Draw ceiling
 	for (i = 0; i < ray->wall_start; i++)
 		mlx_put_pixel(game->background, ray->slice, i, ceiling_color);
 	// Draw wall
 	for (i = ray->wall_start; i <= ray->wall_end; i++)
-		mlx_put_pixel(game->background, ray->slice, i, wall_color);
+	{
+		texture_y = (int)tex_pos & (ray->walls->north->height - 1);
+		mlx_put_pixel(game->background, ray->slice, i, get_textured_color(ray, texture_x, texture_y));
+		texture_y++;
+	}
 	// Draw floor
 	for (i = ray->wall_end + 1; i < HEIGHT; i++)
 		mlx_put_pixel(game->background, ray->slice, i, floor_color);

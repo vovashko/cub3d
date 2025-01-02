@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2025/01/02 15:29:27 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/02 16:31:52 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,12 @@ typedef struct s_map_file_data
 	char **map;
 } t_map_file_data;
 
+typedef struct s_walls {
+	mlx_texture_t *north;
+	mlx_texture_t *south;
+	mlx_texture_t *west;
+	mlx_texture_t *east;
+} t_walls;
 
 typedef struct s_ray {
     int slice;         // Ray slice (column)
@@ -82,9 +88,10 @@ typedef struct s_ray {
 	double camera_x;    // Camera x coordinate
 	int wall_start;	 // Start of the wall slice
 	int wall_end;       // End of the wall slice
-
+	t_walls *walls;
 	
 } t_ray;
+
 
 
 

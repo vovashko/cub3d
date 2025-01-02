@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/02 15:30:11 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/02 16:32:26 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,11 @@ void	init_game(t_game *game, char *map_file)
 	ray->step_dir_y = 0;
 	ray->hit_portion = 0;
 	game->ray = ray;
-
+	ray->walls = (t_walls *)malloc(sizeof(t_walls));
+	ray->walls->north = mlx_load_png("textures/north.png");
+	ray->walls->south = mlx_load_png("textures/south.png");
+	ray->walls->west =mlx_load_png("textures/west.png");
+	ray->walls->east =mlx_load_png("textures/east.png");
 	
 	
 }
