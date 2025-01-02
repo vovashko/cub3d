@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:22:56 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/02 12:16:43 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/02 12:48:43 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,19 +79,11 @@ static bool	process_empty_line(int map_started, int fd, char *line)
 	return (false);
 }
 
-//TODO: maybe change the init_dame function, so it could open the fd, 
-// send it to init_mfd, that would eventually send it to get_file_data
-// because init_mfd has too many lines
-
-// and then we could modify get_file_data to get 0 as a variable for map_started
-// so we could get rid of a few lines of code
-bool	get_file_data(t_map_file_data *mfd, int fd)
+bool	get_file_data(t_map_file_data *mfd, int fd, int map_started)
 {
 	char	*line;
-	int		map_started;
 	char	*trimmed_line;
 
-	map_started = 0;
 	line = get_next_line(fd);
 	while (line)
 	{

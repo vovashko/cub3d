@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2024/12/18 14:20:03 by vovashko      ########   odam.nl         */
+/*   Updated: 2025/01/02 12:48:17 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ bool check_file_content(t_map_file_data *mfd);
 bool check_colours_range(t_color *color);
 bool validate_map(t_map_file_data *mfd, t_player *player);
 void get_map_height(t_map_file_data *mfd, int fd);
-bool get_file_data(t_map_file_data *mfd, int fd);
+bool get_file_data(t_map_file_data *mfd, int fd, int map_started);
 bool is_config_line(const char *line);
 void grow_map(t_map_file_data *mfd, char *line);
 

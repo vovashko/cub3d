@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:42:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/02 11:26:44 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/02 12:49:42 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,10 @@ static bool	process_empty_rows(char *curr_row, int *empty_row_detected)
 }
 
 // Validate map enclosure
-// TODO: discuss, maybe get rid of cuur_row and use map[i] instead to saave lines
 bool	validate_map_enclosure(char **map)
 {
 	static int	i;
 	int			empty_row_detected;
-	char		*curr_row;
 	char		*row_on_top;
 	char		*row_on_bottom;
 
@@ -74,17 +72,16 @@ bool	validate_map_enclosure(char **map)
 		return (handle_error("Map is missing or empty.\n"), false);
 	while (map[i])
 	{
-		curr_row = map[i];
 		initialize_rows(map, &i, &row_on_top, &row_on_bottom);
-		if (!process_empty_rows(curr_row, &empty_row_detected))
+		if (!process_empty_rows(map[i], &empty_row_detected))
 			return (false);
-		if (is_empty_row(curr_row))
+		if (is_empty_row(map[i]))
 		{
 			i++;
 			continue ;
 		}
-		if (!validate_edge_rows(curr_row, row_on_top, row_on_bottom, i) || \
-		!handle_row_validation(curr_row, row_on_top, row_on_bottom))
+		if (!validate_edge_rows(map[i], row_on_top, row_on_bottom, i) || \
+		!handle_row_validation(map[i], row_on_top, row_on_bottom))
 			return (false);
 		i++;
 	}

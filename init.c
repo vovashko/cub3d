@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/18 15:15:11 by vovashko      ########   odam.nl         */
+/*   Updated: 2025/01/02 12:47:55 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ void	init_mfd(t_game *game, char *map_file)
 	game->mfd->west_texture = NULL;
 	game->mfd->east_texture = NULL;
 	game->mfd->map = NULL;
-	if (get_file_data(game->mfd, fd) == false)
+	if (get_file_data(game->mfd, fd, 0) == false)
 	{
 		handle_error("Invalid file content");
 		free_mfd(game->mfd);
