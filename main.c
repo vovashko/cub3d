@@ -37,7 +37,7 @@ void free_player(t_player *player)
 	free(player);
 }
 
-
+/*
 int main (int argc, char **argv)
 {
 	
@@ -97,3 +97,77 @@ int main (int argc, char **argv)
 	free(game);
     return (0);
 }
+*/
+
+// Adding my main, for checking purposes to call my parsing and validation functions
+/*
+	// static void print_textures_and_colors(const t_map_file_data *mfd)
+// {
+//     printf("Textures:\n");
+//     printf("  North: %s\n", mfd->north_texture);
+//     printf("  South: %s\n", mfd->south_texture);
+//     printf("  West: %s\n", mfd->west_texture);
+//     printf("  East: %s\n", mfd->east_texture);
+
+//     printf("\nColors:\n");
+//     printf("  Floor: %d, %d, %d\n", mfd->floor_color->r, mfd->floor_color->g, mfd->floor_color->b);
+//     printf("  Ceiling: %d, %d, %d\n", mfd->ceiling_color->r, mfd->ceiling_color->g, mfd->ceiling_color->b);
+// }
+
+// static void print_map(char **map)
+// {
+//     printf("\nMap:\n");
+//     for (int i = 0; map[i]; i++)
+//     {
+//         printf("%s\n", map[i]);
+//     }
+// }
+
+*/
+int main(int argc, char **argv)
+{
+    // t_map_file_data mfd = {0};
+    // t_player player = {0};
+
+    if (argc != 2)
+    {
+        fprintf(stderr, "Usage: ./cub3d <map.cub>\n");
+        return EXIT_FAILURE;
+    }
+	t_game* game = (t_game *)malloc(sizeof(t_game));
+    init_game(game, argv[1]);
+
+    // int fd = open(argv[1], O_RDONLY);
+    // printf("open file fd is: %d\n", fd);
+    // get_map_height(&mfd, fd);
+    // // printf("map height: %d\n", mfd.height);
+    // fd = open(argv[1], O_RDONLY);
+    // get_file_data(&mfd, fd);
+    // print_map(mfd.map);
+    // int i = 1;
+    // while (mfd.map[i])
+    // {
+    //     printf("the map is: %c\n", *(mfd.map[i]));
+    //     i++;
+    // }
+
+    if (!validate_map(game->mfd, game->player))
+    {
+        // printf("we are here\n");
+        printf("Map validation failed.\n");
+        free_mfd(game->mfd);
+        return EXIT_FAILURE;
+    }
+
+    printf("Map is valid.\n");
+
+    // Print textures, colors, and map
+    // print_textures_and_colors(&mfd);
+    // print_map(mfd.map);
+
+    // Free allocated memory
+    free_mfd(game->mfd);
+
+    return EXIT_SUCCESS;
+}
+
