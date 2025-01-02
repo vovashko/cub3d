@@ -3,10 +3,10 @@ you got cubed
 
 To-dos:
 - check the raycaster:
-	- need to work on the t_ray struct to evaluate what is necessary to keep, what is redundant. 
-	- introduced perform_dda function, however, everything requires testing. It seems like Bresenham is a better choice for the algo, so need to look into its implementation. If it's too much, we can get back to DDA (the sample code uses DDA)
-
+	- clean up t_ray struct
+	- add texture handling
 	
+	- add wall collission so player doesn't get out of bounds
 
 - refactoring and leaks
 
@@ -40,4 +40,6 @@ Good things to add(aka bonus):
 
 	- found tester, added as a submodule
 
+	- raycaster:
+		- working finally, but only with solid colors
 
