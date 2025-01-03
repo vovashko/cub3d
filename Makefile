@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-SRCS = main.c init.c map_file_check.c controls.c
+SRCS = main.c init.c controls.c parsing_validation/map_validation.c parsing_validation/colors.c parsing_validation/config_parsing.c parsing_validation/map_parsing.c parsing_validation/parsing_utils.c parsing_validation/wall_checks.c
 SRCS_GNL = gnl/get_next_line.c gnl/get_next_line_utils.c
 OBJS = $(SRCS:.c=.o) $(SRCS_GNL:.c=.o)
 NAME = cub3d
