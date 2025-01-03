@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/02 12:47:55 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/02 14:42:32 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,10 @@ void init_player(t_game *game)
 	#endif
 	game->player->x = -1;
 	game->player->y = -1;
-	game->player->dir = 0;
-	game->player->dx = cos(game->player->dir) * 5;
-	game->player->dy = sin(game->player->dir) * 5;
+	game->player->plane_x = 0;
+	game->player->plane_y = 0.66;
+	game->player->dx = 1;
+	game->player->dy = 0;
 	game->player->fov = PI / 3;
 }
 
@@ -78,7 +79,7 @@ void	init_game(t_game *game, char *map_file)
 		exit(1);
 	}
 
-	// game->player->player_img->enabled = false;
+	game->player->player_img->enabled = false;
 
 	game->wall = mlx_texture_to_image(game->mlx,
 			mlx_load_png("textures/west.png"));
@@ -87,11 +88,12 @@ void	init_game(t_game *game, char *map_file)
 		printf("Error\nFailed to resize image\n");
 		exit(1);
 	}
-	game->player->x = 5 * TILE_SIZE;
-	game->player->y = 5 * TILE_SIZE;
-	game->player->dir = 0;
-	game->player->dx = cos(game->player->dir) * 5;
-	game->player->dy = sin(game->player->dir) * 5;
+	game->player->x = 2 + 0.5;
+	game->player->y = 2 + 0.5;
+	game->player->plane_x = 0;
+	game->player->plane_y = 0.66;
+	game->player->dx = 1; // equivalent to 1
+	game->player->dy = 0; // equivalent to 1
 	game->player->fov = PI / 3;
 #endif
 #if TEST_MODE == 2
@@ -104,9 +106,9 @@ void	init_game(t_game *game, char *map_file)
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+		1, 0, 0, 1, 1, 1, 0, 0, 0, 1,
+		1, 0, 0, 1, 0, 1, 0, 0, 0, 1,
+		1, 0, 0, 1, 1, 1, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -121,16 +123,22 @@ void	init_game(t_game *game, char *map_file)
 #endif
 
 	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
-	ray->x = game->player->x;
-	ray->y = game->player->y;
-	ray->dir = game->player->dir;
-	ray->x_offset = 0;
-	ray->y_offset = 0;
-	ray->map_x = 0;
-	ray->map_y = 0;
-	ray->map_pos = 0;
-	ray->hit_distance = 1000000000000;
+	ray->slice = WIDTH;
+	ray->shift_factor = FOV_FACTOR;
+	ray->x = 0;
+	ray->y = 0;
+	ray->delta_x = 0;
+	ray->delta_y = 0;
+	ray->dist_x = 0;
+	ray->dist_y = 0;
+	ray->hit_x = 0;
+	ray->hit_y = 0;
+	ray->x_dir = 0;
+	ray->y_dir = 0;
+	ray->hit_portion = 0;
 	game->ray = ray;
+
+	
 	
 }
 

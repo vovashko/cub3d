@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2025/01/02 12:48:17 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/02 13:41:15 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@
 #include "libft/libft/libft.h"
 
 #define PI 3.14159265359
-#define PI_2 1.57079632679
-#define FOV 60
+#define PI_2 1.57079632679  
+#define FOV_FACTOR 0.66
+
 #define TILE_SIZE 64
 #define MAP_WIDTH 10
 #define MAP_HEIGHT 10
@@ -34,9 +35,9 @@
 #define RAD 0.01745329251
 #define EPSILON 0.0001
 
-#define WIDTH 800
-#define HEIGHT 600
-#define TEST_MODE 2
+#define WIDTH 1200
+#define HEIGHT 800
+#define TEST_MODE 0
 #define MAX_DOF 8
 
 typedef struct s_color
@@ -60,20 +61,29 @@ typedef struct s_map_file_data
 	char **map;
 } t_map_file_data;
 
-typedef struct s_ray
-{
-	int ray_num;
-	int map_x;		// map x
-	int map_y;		// map y
-	int map_pos;	// map position
-	float x;		// ray x
-	float y;		// ray y
-	float dir;		// ray angle
-	float x_offset; // x offset
-	float y_offset; // y offset
-	float hit_distance;
-	float hit_x;
-	float hit_y;
+
+typedef struct s_ray {
+    int slice;         // Ray slice (column)
+    float shift_factor; // FOV shift factor for each slice
+    float x;           // Ray x direction
+    float y;           // Ray y direction
+    float delta_x;     // Step size in x-direction
+    float delta_y;     // Step size in y-direction
+    float dist_x;      // Distance to next x gridline
+    float dist_y;      // Distance to next y gridline
+    int hit_x;         // Map x position of wall hit
+    int hit_y;         // Map y position of wall hit
+    int x_dir;         // Direction of step in x (-1 or 1)
+    int y_dir;         // Direction of step in y (-1 or 1)
+    double hit_distance; // Final distance to the wall hit
+    float hit_portion;  // Texture alignment
+	char hit_orientation; // Orientation of the wall hit
+	float angle;        // Angle of the ray
+	u_int32_t slice_height; // Height of the wall slice
+	u_int32_t texture_x; // Texture x coordinate
+	double camera_x;    // Camera x coordinate
+	int wall_start;	 // Start of the wall slice
+	int wall_end;       // End of the wall slice
 } t_ray;
 
 typedef struct s_render
@@ -90,7 +100,9 @@ typedef struct s_player
 	float y;
 	float dx;
 	float dy;
-	float dir;
+	float view_angle;
+	float plane_x;
+	float plane_y;
 	float fov;
 } t_player;
 

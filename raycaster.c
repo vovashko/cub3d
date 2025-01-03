@@ -10,194 +10,208 @@
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "cub3d.h"
+#include "cub3d.h"
 
-void find_wall(t_ray *ray, int *map)
+void	init_ray(t_ray *ray, t_player *player)
 {
-		int dof = 0;
-		while (dof < MAX_DOF)
-		{
-			ray->map_x = (int)(ray->x) >> 6;
-			ray->map_y = (int)(ray->y) >> 6;
-			ray->map_pos = ray->map_y * MAP_WIDTH  + ray->map_x; // instead of 10, use the actual map width
-			if (ray->map_pos > 0 && ray->map_pos < 10 * 10 && map[ray->map_pos] == 1) // instead of 100, use the actual map size
-				break ;
-			else
-			{
-				ray->x += ray->x_offset;
-				ray->y += ray->y_offset;
-				dof += 1;
-			}
-		}
-}
+	ray->camera_x = 2 * ray->slice / (double)WIDTH - 1;
+	ray->x = player->dx + player->plane_x * ray->camera_x;
+	ray->y = player->dy + player->plane_y * ray->camera_x;
+	ray->hit_x = (int)player->x;
+	ray->hit_y = (int)player->y;
 
-void check_horizontal(t_ray *ray, t_player *player, int *map)
-{
-		float aTan = -1 / tan(ray->dir);
-		if (ray->dir > PI) // ray facing down
-		{
-			ray->y = (((int)player->y >> 6) << 6) - 0.0001;
-			ray->x = (player->y - ray->y) * aTan + player->x;
-			ray->y_offset = -64;
-			ray->x_offset = -ray->y_offset * aTan;
-		}
-		else if (ray->dir < PI) // ray facing up
-		{
-			ray->y = (((int)player->y >> 6) << 6) + 64;
-			ray->x = (player->y - ray->y) * aTan + player->x;
-			ray->y_offset = 64;
-			ray->x_offset = -ray->y_offset * aTan;
-		}
-		else // ray facing right or left
-		{
-			ray->x = player->x;
-			ray->y = player->y;
-			return ;
-		}
-		find_wall(ray, map);
-}
-
-void check_vertical(t_ray *ray, t_player *player, int *map)
-{
-		float nTan = -tan(ray->dir);
-		if (ray->dir > PI_2 && ray->dir < (PI + PI_2)) // ray facing left
-		{
-			ray->x = (((int)player->x >> 6) << 6) - 0.0001;
-			ray->y = (player->x - ray->x) * nTan + player->y;
-			ray->x_offset = -64;
-			ray->y_offset = -ray->x_offset * nTan;
-		}
-		else if (ray->dir < PI_2 || ray->dir > (PI + PI_2)) // ray facing right
-		{
-			ray->x = (((int)player->x >> 6) << 6) + 64;
-			ray->y = (player->x - ray->x) * nTan + player->y;
-			ray->x_offset = 64;
-			ray->y_offset = -ray->x_offset * nTan;
-		}
-		else  // ray facing up or dwon
-		{
-			ray->x = player->x;
-			ray->y = player->y;
-			return ;
-		}
-		find_wall(ray, map);
-}
-
-void hit_distance(t_ray *ray, t_player *player, int *map)
-{
-	check_horizontal(ray, player, map);
-	float h_dist = sqrt(pow((ray->x - player->x),2) + pow((ray->y - player->y), 2));
-	check_vertical(ray, player, map);
-	float v_dist = sqrt(pow((ray->x - player->x),2) + pow((ray->y - player->y), 2));
-	if (h_dist < v_dist)
-		ray->hit_distance = h_dist;
+	if (ray->y == 0)
+		ray->delta_y = 1e30;
 	else
-		ray->hit_distance = v_dist;
-}
-
-void draw_walls(t_ray *ray, t_game *game)
-{
-	float line_height = (TILE_SIZE / ray->hit_distance) * WIDTH;
-	float draw_start = HEIGHT / 2 - line_height / 2;
-	float draw_end = HEIGHT / 2 + line_height / 2;
-	if (draw_start < 0)
-		draw_start = 0;
-	if (draw_end >= HEIGHT)
-		draw_end = HEIGHT - 1;
-	int color = get_rgba(25, 21, 73, 15);
-;
-	int x = ray->ray_num;
-	int y = draw_start;
-	while (y < draw_end)
-	{
-		mlx_put_pixel(game->wall, x, y, color);
-		y++;
-	}
+		ray->delta_y = fabs(1 / ray->y);
+	if (ray->x == 0)
+		ray->delta_x = 1e30;
+	else
+		ray->delta_x = fabs(1 / ray->x);
 	
-}
-
-void calculate_ray(t_ray *ray, int ray_num)
-{
-	ray->dir = ray->dir - RAD * FOV / 2 + RAD * FOV / WIDTH * ray_num;
-	if (ray->dir < 0)
-		ray->dir += 2 * PI;
-	if (ray->dir > 2 * PI)
-		ray->dir -= 2 * PI;	
-}
-
-void raycaster(t_player *player, t_ray *ray, int *map, t_game *game)
-{
-	int ray_num = 0;
-	ray->dir = player->dir - RAD * FOV / 2 + RAD * FOV / WIDTH * ray_num;
-	while(ray_num < WIDTH)
+	if (ray->x < 0)
 	{
-		calculate_ray(ray, ray_num);
-		hit_distance(ray, player, map);
-		draw_walls(ray, game);
-		ray_num++;
+		ray->x_dir = -1;
+		ray->dist_x = (player->x - ray->hit_x) * ray->delta_x;
+	}
+	else
+	{
+		ray->x_dir = 1;
+		ray->dist_x = (ray->hit_x + 1.0 - player->x) * ray->delta_x;
+	}
+	if (ray->y < 0)
+	{
+		ray->y_dir = -1;
+		ray->dist_y = (player->y - ray->hit_y) * ray->delta_y;
+	}
+	else
+	{
+		ray->y_dir = 1;
+		ray->dist_y = (ray->hit_y + 1.0 - player->y) * ray->delta_y;
 	}
 }
-void draw_floor_and_ceiling(t_game *game)
+
+int	perform_dda(t_ray *ray, int *map)
 {
-	int x;
-	int y;
-	int floor_color;
-	int ceiling_color;
-	
+	int	hor;
 
-	floor_color = get_rgba(39, 245, 236, 255);
-	ceiling_color = get_rgba(245, 121, 3, 255);
-
-	x = 0;
-	
-	while (x < WIDTH)
+	hor = 0;
+	while (1)
 	{
-		y = 0;
-		while (y < HEIGHT / 2)
+		if (ray->dist_x < ray->dist_y)
 		{
-			mlx_put_pixel(game->background, x, y, ceiling_color);
-			y++;
+			ray->dist_x += ray->delta_x;
+			ray->hit_x += ray->x_dir;
+			hor = 1;
+			if (ray->x_dir > 0)
+				ray->hit_orientation = 'N';
+			else
+				ray->hit_orientation = 'S';
 		}
-		y = HEIGHT / 2;
-		while (y < HEIGHT)
+		else
 		{
-			mlx_put_pixel(game->background, x, y, floor_color);
-			y++;
+			ray->dist_y += ray->delta_y;
+			ray->hit_y += ray->y_dir;
+			hor = 0;
+			if (ray->y_dir > 0)
+				ray->hit_orientation = 'W';
+			else
+				ray->hit_orientation = 'E';
 		}
-		x++;
+		// Check if the ray hits a wall
+		if (get_map_value(map, ray->hit_x, ray->hit_y) == 1)
+			return (hor);
 	}
 }
 
-void render(void *params)
+void	calculate_wall_height(t_ray *ray, int hor, t_player *player)
 {
-	t_game *game = (t_game *)params;
-	raycaster(game->player, game->ray, game->map, game);
+	if (hor == 0)
+		ray->hit_distance = (ray->hit_y - player->y + (1 - ray->y_dir) / 2) / ray->y;
+	else
+		ray->hit_distance = (ray->hit_x - player->x + (1 - ray->x_dir) / 2) / ray->x;
+
+	if (ray->hit_distance < 0)
+		ray->hit_distance = 1e30;
+
+	ray->slice_height = (int)(HEIGHT / ray->hit_distance);
+	ray->wall_start = HEIGHT / 2 - ray->slice_height / 2;
+	if (ray->wall_start < 0)
+		ray->wall_start = 0;
+	ray->wall_end = ray->slice_height / 2 + HEIGHT / 2;
+	if (ray->wall_end >= HEIGHT)
+	{
+		ray->wall_end = HEIGHT - 1;
+	}
 }
 
-int main()
-{
 
+
+
+int	get_rgba(int r, int g, int b, int a)
+{
+	return (r << 24 | g << 16 | b << 8 | a);
+}
+
+int	get_textured_color(char orientation)
+{
+	int	base_color;
+
+	// Example: Blend the wall orientation color with texture coordinates
+	switch (orientation)
+	{
+	case 'N':
+		base_color = get_rgba(255, 0, 0, 255);
+		break ; // Red for north
+	case 'S':
+		base_color = get_rgba(0, 255, 0, 255);
+		break ; // Green for south
+	case 'E':
+		base_color = get_rgba(0, 0, 255, 255);
+		break ; // Blue for east
+	case 'W':
+		base_color = get_rgba(255, 255, 0, 255);
+		break ; // Yellow for west
+	default:
+		base_color = get_rgba(255, 255, 255, 255);
+		break ; // White fallback
+	}
+	return (base_color);
+}
+
+void	draw_wall_slice(t_game *game, t_ray *ray)
+{
+	int	wall_color;
+	int	i;
+
+	int ceiling_color = get_rgba(245, 121, 3, 255); // Orange
+	int floor_color = get_rgba(39, 245, 236, 255);  // Cyan
+	wall_color = get_textured_color(ray->hit_orientation);
+	i = 0;
+	// Draw ceiling
+	for (i = 0; i < ray->wall_start; i++)
+		mlx_put_pixel(game->background, ray->slice, i, ceiling_color);
+	// Draw wall
+	for (i = ray->wall_start; i <= ray->wall_end; i++)
+		mlx_put_pixel(game->background, ray->slice, i, wall_color);
+	// Draw floor
+	for (i = ray->wall_end + 1; i < HEIGHT; i++)
+		mlx_put_pixel(game->background, ray->slice, i, floor_color);
+}
+
+int	get_map_value(int *map, int x, int y)
+{
+	return (map[y * 10 + x]); // Assuming map width is 10
+}
+
+
+
+
+
+
+
+void	raycast_and_render(t_game *game)
+{
+	int	hor;
+
+	game->ray->slice = 0;
+	// reset_window(game->background);
+	while (game->ray->slice < WIDTH)
+	{
+		init_ray(game->ray, game->player);
+		hor = perform_dda(game->ray, game->map);
+		calculate_wall_height(game->ray, hor, game->player);
+		draw_wall_slice(game, game->ray);
+		game->ray->slice++;
+	}
+}
+
+void	game_loop(void *param)
+{
+	t_game	*game;
+
+	game = param;
+	key_hooks(game);
+	update_player(game);
+	raycast_and_render(game);
+}
+
+int	main(void)
+{
 	t_game *game = (t_game *)malloc(sizeof(t_game));
 	init_game(game, "map.cub");
-	
-	
-	draw_floor_and_ceiling(game);
+
+	// draw_floor_and_ceiling(game);
 	if (mlx_image_to_window(game->mlx, game->background, 0, 0) == -1)
 	{
 		printf("Error\nFailed to draw image\n");
 		exit(1);
 	}
-	if (mlx_image_to_window(game->mlx, game->wall, 0, 0) == -1)
-	{
-		printf("Error\nFailed to draw image\n");
-		exit(1);
-	}
-	mlx_set_setting(MLX_STRETCH_IMAGE, 1);    // stretch image based on window size changing
-	mlx_loop_hook(game->mlx, key_hooks, game);
-	mlx_loop_hook(game->mlx, update_player, game);
-	mlx_loop_hook(game->mlx, render, game);
-    mlx_loop(game->mlx);
-    mlx_terminate(game->mlx);
-	
+	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
+		// stretch image based on window size changing
+	mlx_loop_hook(game->mlx, game_loop, game);
+	mlx_loop(game->mlx);
+	mlx_terminate(game->mlx);
+
 	return (0);
 }
