@@ -82,9 +82,9 @@ void	calculate_wall_height(t_ray *ray, int hor, t_player *player)
 	if (ray->hit_distance < 0)
 		ray->hit_distance = 1e30;
 	if	(hor == 0)
-		ray->hit_portion = player->x + ray->hit_distance * ray->hit_x;
+		ray->hit_portion = player->x + ray->hit_distance * ray->dx;
 	else
-		ray->hit_portion = player->y + ray->hit_distance * ray->hit_y;
+		ray->hit_portion = player->y + ray->hit_distance * ray->dy;
 	ray->hit_portion -= floor(ray->hit_portion);
 	if (ray->hit_orientation == 'W' || ray->hit_orientation == 'S')
 		ray->hit_portion = 1 - ray->hit_portion;
@@ -94,9 +94,7 @@ void	calculate_wall_height(t_ray *ray, int hor, t_player *player)
 		ray->wall_start = 0;
 	ray->wall_end = ray->slice_height / 2 + HEIGHT / 2;
 	if (ray->wall_end >= HEIGHT)
-	{
 		ray->wall_end = HEIGHT - 1;
-	}
 
 }
 
