@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-static char	*check_and_assign_texture(char *texture, char *trimmed_line)
+static char *check_and_assign_texture(char *texture, char *trimmed_line)
 {
 	if (texture == NULL)
 		return (trimmed_line);
@@ -24,23 +24,19 @@ static char	*check_and_assign_texture(char *texture, char *trimmed_line)
 }
 
 // Parses a configuration line for textures or colors
-void	parse_config_line(t_map_file_data *mfd, char *line)
+void parse_config_line(t_map_file_data *mfd, char *line)
 {
-	char	*trimmed_line;
+	char *trimmed_line;
 
 	trimmed_line = skip_spaces(line);
 	if (ft_strncmp(trimmed_line, "NO ", 3) == 0)
-		mfd->north_texture = ft_strdup(check_and_assign_texture \
-		(mfd->north_texture, skip_spaces(&trimmed_line[3])));
+		mfd->north_texture = ft_strdup(check_and_assign_texture(mfd->north_texture, skip_spaces(&trimmed_line[3])));
 	else if (ft_strncmp(trimmed_line, "SO ", 3) == 0)
-		mfd->south_texture = ft_strdup(check_and_assign_texture \
-		(mfd->south_texture, skip_spaces(&trimmed_line[3])));
+		mfd->south_texture = ft_strdup(check_and_assign_texture(mfd->south_texture, skip_spaces(&trimmed_line[3])));
 	else if (ft_strncmp(trimmed_line, "WE ", 3) == 0)
-		mfd->west_texture = ft_strdup(check_and_assign_texture \
-		(mfd->west_texture, skip_spaces(&trimmed_line[3])));
+		mfd->west_texture = ft_strdup(check_and_assign_texture(mfd->west_texture, skip_spaces(&trimmed_line[3])));
 	else if (ft_strncmp(trimmed_line, "EA ", 3) == 0)
-		mfd->east_texture = ft_strdup(check_and_assign_texture \
-		(mfd->east_texture, skip_spaces(&trimmed_line[3])));
+		mfd->east_texture = ft_strdup(check_and_assign_texture(mfd->east_texture, skip_spaces(&trimmed_line[3])));
 	else if (ft_strncmp(trimmed_line, "F ", 2) == 0)
 		get_color(&trimmed_line[2], mfd->floor_color);
 	else if (ft_strncmp(trimmed_line, "C ", 2) == 0)
@@ -49,10 +45,10 @@ void	parse_config_line(t_map_file_data *mfd, char *line)
 		handle_error("Invalid configuration line");
 }
 
-static void	skip_empty_lines(int map_started, int fd)
+static void skip_empty_lines(int map_started, int fd)
 {
-	char	*line;
-	char	*trimmed_line;
+	char *line;
+	char *trimmed_line;
 
 	if (map_started)
 	{
@@ -68,7 +64,7 @@ static void	skip_empty_lines(int map_started, int fd)
 	}
 }
 
-static bool	process_empty_line(int map_started, int fd, char *line)
+static bool process_empty_line(int map_started, int fd, char *line)
 {
 	if (*line == '\n')
 	{
@@ -79,17 +75,24 @@ static bool	process_empty_line(int map_started, int fd, char *line)
 	return (false);
 }
 
-bool	get_file_data(t_map_file_data *mfd, int fd, int map_started)
-{
-	char	*line;
-	char	*trimmed_line;
+//TODO: think how to fix the error that commes up.
+// the thing is that in a while loop statement we can't do
+// line = get_next_line(fd)
+// we need to do it in a different way because of the norm. the issue that arises
+// is that when we process an empty line, we free it and continue, 
+// but then it doesn't grab a new line and we fail
 
-	line = get_next_line(fd);
-	while (line)
+bool get_file_data(t_map_file_data *mfd, int fd, int map_started)
+{
+	char *line;
+	char *trimmed_line;
+
+	// line = get_next_line(fd);
+	while ((line = get_next_line(fd)))
 	{
 		trimmed_line = skip_spaces(line);
 		if (process_empty_line(map_started, fd, line))
-			continue ;
+			continue;
 		if (is_config_line(trimmed_line) && !map_started)
 			parse_config_line(mfd, trimmed_line);
 		else if (ft_strchr("01NSEW", *trimmed_line))
@@ -101,7 +104,7 @@ bool	get_file_data(t_map_file_data *mfd, int fd, int map_started)
 		else
 			return (handle_error("Invalid line encountered"), false);
 		free(line);
-		line = get_next_line(fd);
+		// line = get_next_line(fd);
 	}
 	if (!map_started)
 		return (handle_error("Map section not found"), false);
