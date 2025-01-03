@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:03:16 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/03 15:30:57 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/03 16:41:44 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void turn_controls(t_game *game)
 void mouse_turn(double delta_x, double delta_y, void *param)
 {
 	t_game *game = (t_game *)param;
-	(void)delta_x;
+	(void)delta_y;
 
 	double old_dx;
     double old_plane_x;
@@ -54,11 +54,11 @@ void mouse_turn(double delta_x, double delta_y, void *param)
 	old_dx = game->player->dx;
     old_plane_x = game->player->plane_x;
 
-	if (delta_y < 0)
+	if (delta_x < 0)
 	{
 		turn = -turn; // Rotate left
 	}
-	else if (delta_y == 0)
+	else if (delta_x == 0)
 	{
 		return; // No rotation
 	}
@@ -70,6 +70,7 @@ void mouse_turn(double delta_x, double delta_y, void *param)
     // Rotate camera plane
     game->player->plane_x = game->player->plane_x * cos(turn) - game->player->plane_y * sin(turn);
     game->player->plane_y = old_plane_x * sin(turn) + game->player->plane_y * cos(turn);
+	mlx_set_mouse_pos(game->mlx, WIDTH / 2, HEIGHT / 2);
 }
 
 
@@ -98,5 +99,7 @@ void key_hooks(void *params)
 		game->player->x += game->player->dy;
 		game->player->y -= game->player->dx;
 	}
+	if (mlx_is_key_down(game->mlx, MLX_KEY_M))
+		mouse_turn(1, 0, game);
 	turn_controls(game);
 }

@@ -228,7 +228,7 @@ int	main(void)
 	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
 		// stretch image based on window size changing
 	mlx_loop_hook(game->mlx, game_loop, game);
-	mlx_scroll_hook(game->mlx, mouse_turn, game);
+	// mlx_cursor_hook(game->mlx, mouse_turn, game);
 	mlx_loop(game->mlx);
 	mlx_terminate(game->mlx);
 	return (0);
