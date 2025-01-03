@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 17:23:51 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/18 15:18:20 by vovashko      ########   odam.nl         */
+/*   Updated: 2025/01/03 16:53:19 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	init_ray(t_ray *ray, t_player *player)
 	ray->dy = player->dy + player->plane_y * ray->camera_x;
 	ray->hit_x = (int)player->x;
 	ray->hit_y = (int)player->y;
-
 	if (ray->dy == 0)
 		ray->delta_y = 1e30;
 	else
@@ -28,7 +27,6 @@ void	init_ray(t_ray *ray, t_player *player)
 		ray->delta_x = 1e30;
 	else
 		ray->delta_x = fabs(1 / ray->dx);
-	
 	if (ray->dx < 0)
 	{
 		ray->step_dir_x = -1;
@@ -87,13 +85,14 @@ int	perform_dda(t_ray *ray, int *map)
 void	calculate_wall_height(t_ray *ray, int hor, t_player *player)
 {
 	if (hor == 0)
-		ray->hit_distance = (ray->hit_y - player->y + (1 - ray->step_dir_y) / 2) / ray->dy;
+		ray->hit_distance = (ray->hit_y - player->y + (1 - ray->step_dir_y) / 2)
+			/ ray->dy;
 	else
-		ray->hit_distance = (ray->hit_x - player->x + (1 - ray->step_dir_x) / 2) / ray->dx;
-
+		ray->hit_distance = (ray->hit_x - player->x + (1 - ray->step_dir_x) / 2)
+			/ ray->dx;
 	if (ray->hit_distance < 0)
 		ray->hit_distance = 1e30;
-	if	(hor == 0)
+	if (hor == 0)
 		ray->hit_portion = player->x + ray->hit_distance * ray->dx;
 	else
 		ray->hit_portion = player->y + ray->hit_distance * ray->dy;
@@ -107,11 +106,7 @@ void	calculate_wall_height(t_ray *ray, int hor, t_player *player)
 	ray->wall_end = ray->slice_height / 2 + HEIGHT / 2;
 	if (ray->wall_end >= HEIGHT)
 		ray->wall_end = HEIGHT - 1;
-
 }
-
-
-
 
 uint32_t	get_rgba(int r, int g, int b, int a)
 {
@@ -120,62 +115,59 @@ uint32_t	get_rgba(int r, int g, int b, int a)
 
 uint32_t	get_textured_color(int x, int y, mlx_texture_t *texture)
 {
-	uint32_t base_color;
-
-	int32_t r;
-	int32_t g;
-	int32_t b;
-	int32_t a;
+	uint32_t	base_color;
+	int32_t		r;
+	int32_t		g;
+	int32_t		b;
+	int32_t		a;
 
 	r = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel];
-	g = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel + 1];
-	b = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel + 2];
-	a = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel + 3];
-
+	g = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel
+		+ 1];
+	b = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel
+		+ 2];
+	a = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel
+		+ 3];
 	base_color = get_rgba(r, g, b, a);
-
 	return (base_color);
 }
 
-mlx_texture_t *assign_texture(t_ray *ray)
+mlx_texture_t	*assign_texture(t_ray *ray)
 {
-	mlx_texture_t *texture;
+	mlx_texture_t	*texture;
 
 	switch (ray->hit_orientation)
 	{
 	case 'N':
 		texture = ray->walls->north;
-		break;
+		break ;
 	case 'S':
 		texture = ray->walls->south;
-		break;
+		break ;
 	case 'E':
 		texture = ray->walls->east;
-		break;
+		break ;
 	case 'W':
 		texture = ray->walls->west;
-		break;
+		break ;
 	default:
 		texture = ray->walls->north;
-		break;
+		break ;
 	}
 	return (texture);
 }
 
 void	draw_wall_slice(t_game *game, t_ray *ray)
 {
-	
-	int	i;
+	int				i;
+	int				texture_x;
+	int				texture_y;
+	double			scale;
+	double			tex_pos;
+	mlx_texture_t	*current_texture;
 
-	int floor_color = get_rgba(245, 121, 3, 255); // Orange
-	int ceiling_color = get_rgba(39, 245, 236, 255);  // Cyan
-	int texture_x;
-	int texture_y;
-	double scale;
-	double tex_pos;
-	mlx_texture_t *current_texture;
-
-
+	int floor_color = get_rgba(245, 121, 3, 255);    // Orange
+	int ceiling_color = get_rgba(39, 245, 236, 255); // Cyan
 	current_texture = assign_texture(ray);
 	texture_x = (ray->hit_portion * current_texture->width);
 	scale = (double)current_texture->height / ray->slice_height;
@@ -189,7 +181,8 @@ void	draw_wall_slice(t_game *game, t_ray *ray)
 	{
 		texture_y = (int)tex_pos % (current_texture->height);
 		tex_pos += scale;
-		mlx_put_pixel(game->background, ray->slice, i, get_textured_color(texture_x, texture_y, current_texture));
+		mlx_put_pixel(game->background, ray->slice, i,
+			get_textured_color(texture_x, texture_y, current_texture));
 	}
 	// Draw floor
 	for (i = ray->wall_end + 1; i < HEIGHT; i++)
@@ -200,7 +193,6 @@ int	get_map_value(int *map, int x, int y)
 {
 	return (map[y * 10 + x]); // Assuming map width is 10
 }
-
 
 void	raycast_and_render(t_game *game)
 {
@@ -216,6 +208,8 @@ void	raycast_and_render(t_game *game)
 		game->ray->slice++;
 	}
 }
+
+// function belows are related to hooks and game loop
 
 void	game_loop(void *param)
 {
@@ -238,7 +232,7 @@ int	main(void)
 		exit(1);
 	}
 	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
-		// stretch image based on window size changing
+	// stretch image based on window size changing
 	mlx_loop_hook(game->mlx, game_loop, game);
 	mlx_loop(game->mlx);
 	mlx_terminate(game->mlx);
