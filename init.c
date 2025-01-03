@@ -162,7 +162,7 @@ void	init_mfd(t_game *game, char *map_file)
 	game->mfd->west_texture = NULL;
 	game->mfd->east_texture = NULL;
 	game->mfd->map = NULL;
-	if (get_file_data(game->mfd, fd) == false)
+	if (get_file_data(game->mfd, fd, 0) == false)
 	{
 		handle_error("Invalid file content");
 		free_mfd(game->mfd);

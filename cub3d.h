@@ -155,15 +155,17 @@ void parse_config_line(t_map_file_data *mfd, char *line);
 bool ft_isspace(char c);
 int get_max_width(char **map);
 bool is_empty_row(char *row);
-bool is_row_enclosed(char *row, int row_index);
-bool validate_edge_gaps(char *curr_row, char *adjacent_row, int is_top, int row_index);
-bool validate_middle_row_gaps(char *curr_row, char *row_on_top, char *row_on_bottom, int row_index);
+bool is_row_enclosed(char *row);
+bool validate_edge_gaps(char *curr_row, char *adjacent_row);
+bool validate_middle_row_gaps(char *curr_row, char *row_on_top, char *row_on_bottom);
 bool validate_player_presence(char **map, t_player *player);
 bool validate_map_enclosure(char **map);
 bool check_file_content(t_map_file_data *mfd);
 bool check_colours_range(t_color *color);
 bool validate_map(t_map_file_data *mfd, t_player *player);
 void get_map_height(t_map_file_data *mfd, int fd);
-bool get_file_data(t_map_file_data *mfd, int fd);
+bool get_file_data(t_map_file_data *mfd, int fd, int map_started);
+bool is_config_line(const char *line);
+void grow_map(t_map_file_data *mfd, char *line);
 
 #endif
