@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2025/01/02 16:31:52 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/03 15:21:01 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ bool check_top_and_bottom(char *line);
 bool check_valid_chars(char **map, int rows);
 bool check_starting_pos(char **map, int rows, t_player *player);
 int	get_map_value(int *map, int x, int y);
+void mouse_turn(double delta_x, double delta_y, void *param);
 
 
 

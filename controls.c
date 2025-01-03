@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:03:16 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/02 14:06:13 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/03 15:30:57 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,37 @@ static void turn_controls(t_game *game)
 
     old_dx = game->player->dx;
     old_plane_x = game->player->plane_x;
+
+    // Rotate direction vector
+    game->player->dx = game->player->dx * cos(turn) - game->player->dy * sin(turn);
+    game->player->dy = old_dx * sin(turn) + game->player->dy * cos(turn);
+
+    // Rotate camera plane
+    game->player->plane_x = game->player->plane_x * cos(turn) - game->player->plane_y * sin(turn);
+    game->player->plane_y = old_plane_x * sin(turn) + game->player->plane_y * cos(turn);
+}
+
+
+// this function is called when the mouse wheel is scrolled
+void mouse_turn(double delta_x, double delta_y, void *param)
+{
+	t_game *game = (t_game *)param;
+	(void)delta_x;
+
+	double old_dx;
+    double old_plane_x;
+    double turn = 0.1; // Rotation angle
+	old_dx = game->player->dx;
+    old_plane_x = game->player->plane_x;
+
+	if (delta_y < 0)
+	{
+		turn = -turn; // Rotate left
+	}
+	else if (delta_y == 0)
+	{
+		return; // No rotation
+	}
 
     // Rotate direction vector
     game->player->dx = game->player->dx * cos(turn) - game->player->dy * sin(turn);
