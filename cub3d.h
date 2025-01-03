@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2025/01/02 13:41:15 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/02 16:31:52 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,29 +61,34 @@ typedef struct s_map_file_data
 	char **map;
 } t_map_file_data;
 
+typedef struct s_walls {
+	mlx_texture_t *north;
+	mlx_texture_t *south;
+	mlx_texture_t *west;
+	mlx_texture_t *east;
+} t_walls;
 
 typedef struct s_ray {
     int slice;         // Ray slice (column)
-    float shift_factor; // FOV shift factor for each slice
-    float x;           // Ray x direction
-    float y;           // Ray y direction
+    float dx;           // Ray x direction
+    float dy;           // Ray y direction
     float delta_x;     // Step size in x-direction
     float delta_y;     // Step size in y-direction
     float dist_x;      // Distance to next x gridline
     float dist_y;      // Distance to next y gridline
     int hit_x;         // Map x position of wall hit
     int hit_y;         // Map y position of wall hit
-    int x_dir;         // Direction of step in x (-1 or 1)
-    int y_dir;         // Direction of step in y (-1 or 1)
+    int step_dir_x;         // Direction of step in x (-1 or 1)
+    int step_dir_y;         // Direction of step in y (-1 or 1)
     double hit_distance; // Final distance to the wall hit
     float hit_portion;  // Texture alignment
 	char hit_orientation; // Orientation of the wall hit
-	float angle;        // Angle of the ray
 	u_int32_t slice_height; // Height of the wall slice
 	u_int32_t texture_x; // Texture x coordinate
 	double camera_x;    // Camera x coordinate
 	int wall_start;	 // Start of the wall slice
 	int wall_end;       // End of the wall slice
+	t_walls *walls;
 } t_ray;
 
 typedef struct s_render
@@ -93,6 +98,7 @@ typedef struct s_render
 
 } t_render;
 
+
 typedef struct s_player
 {
 	mlx_image_t *player_img;
@@ -100,10 +106,8 @@ typedef struct s_player
 	float y;
 	float dx;
 	float dy;
-	float view_angle;
 	float plane_x;
 	float plane_y;
-	float fov;
 } t_player;
 
 typedef struct s_game

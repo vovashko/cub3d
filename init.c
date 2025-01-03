@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/02 14:42:32 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/02 16:32:26 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void init_player(t_game *game)
 	game->player->plane_y = 0.66;
 	game->player->dx = 1;
 	game->player->dy = 0;
-	game->player->fov = PI / 3;
 }
 
 
@@ -94,7 +93,6 @@ void	init_game(t_game *game, char *map_file)
 	game->player->plane_y = 0.66;
 	game->player->dx = 1; // equivalent to 1
 	game->player->dy = 0; // equivalent to 1
-	game->player->fov = PI / 3;
 #endif
 #if TEST_MODE == 2
 	init_mfd(game, map_file);
@@ -124,20 +122,23 @@ void	init_game(t_game *game, char *map_file)
 
 	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
 	ray->slice = WIDTH;
-	ray->shift_factor = FOV_FACTOR;
-	ray->x = 0;
-	ray->y = 0;
+	ray->dx = 0;
+	ray->dy = 0;
 	ray->delta_x = 0;
 	ray->delta_y = 0;
 	ray->dist_x = 0;
 	ray->dist_y = 0;
 	ray->hit_x = 0;
 	ray->hit_y = 0;
-	ray->x_dir = 0;
-	ray->y_dir = 0;
+	ray->step_dir_x = 0;
+	ray->step_dir_y = 0;
 	ray->hit_portion = 0;
 	game->ray = ray;
-
+	ray->walls = (t_walls *)malloc(sizeof(t_walls));
+	ray->walls->north = mlx_load_png("textures/north.png");
+	ray->walls->south = mlx_load_png("textures/south.png");
+	ray->walls->west =mlx_load_png("textures/west.png");
+	ray->walls->east =mlx_load_png("textures/east.png");
 	
 	
 }
