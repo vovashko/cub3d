@@ -80,8 +80,9 @@ bool	validate_map_enclosure(char **map)
 			i++;
 			continue ;
 		}
-		if (!validate_edge_rows(map[i], row_on_top, row_on_bottom, i) || \
-		!handle_row_validation(map[i], row_on_top, row_on_bottom))
+		if (!validate_edge_rows(map[i], row_on_top, row_on_bottom, i))
+			return (false);
+		if (i >= 1 && !handle_row_validation(map[i], row_on_top, row_on_bottom))
 			return (false);
 		i++;
 	}

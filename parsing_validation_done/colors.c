@@ -19,7 +19,10 @@ const char *component_name)
 
 	while (line[*index] && ft_isspace(line[*index]))
 		(*index)++;
-	value = ft_atoi(&line[*index]);
+	if (line[*index])
+		value = ft_atoi(&line[*index]);
+	else
+		value = -1;
 	while (line[*index] && ft_isdigit(line[*index]))
 		(*index)++;
 	while (line[*index] && ft_isspace(line[*index]))
