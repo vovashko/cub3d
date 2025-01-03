@@ -143,29 +143,30 @@ void	init_game(t_game *game, char *map_file)
 	
 }
 
-// void	init_mfd(t_game *game, char *map_file)
-// {
-// 	game->mfd = (t_map_file_data *)malloc(sizeof(t_map_file_data));
-// 	game->mfd->file = map_file;
-// 	game->mfd->width = 0;
-// 	game->mfd->height = 0;
-// 	game->mfd->floor_color = (t_color *)malloc(sizeof(t_color));
-// 	game->mfd->floor_color->r = -1;
-// 	game->mfd->floor_color->g = -1;
-// 	game->mfd->floor_color->b = -1;
-// 	game->mfd->ceiling_color = (t_color *)malloc(sizeof(t_color));
-// 	game->mfd->ceiling_color->r = -1;
-// 	game->mfd->ceiling_color->g = -1;
-// 	game->mfd->ceiling_color->b = -1;
-// 	game->mfd->north_texture = NULL;
-// 	game->mfd->south_texture = NULL;
-// 	game->mfd->west_texture = NULL;
-// 	game->mfd->east_texture = NULL;
-// 	game->mfd->map = NULL;
-// 	if (check_file_content(game->mfd) == false)
-// 	{
-// 		handle_error("Invalid file content");
-// 		free_mfd(game->mfd);
-// 		exit(1);
-// 	}
-// }
+void	init_mfd(t_game *game, char *map_file)
+{
+	int fd = open(map_file, O_RDONLY);
+	game->mfd = (t_map_file_data *)malloc(sizeof(t_map_file_data));
+	game->mfd->file = map_file;
+	game->mfd->width = 0;
+	game->mfd->height = 0;
+	game->mfd->floor_color = (t_color *)malloc(sizeof(t_color));
+	game->mfd->floor_color->r = -1;
+	game->mfd->floor_color->g = -1;
+	game->mfd->floor_color->b = -1;
+	game->mfd->ceiling_color = (t_color *)malloc(sizeof(t_color));
+	game->mfd->ceiling_color->r = -1;
+	game->mfd->ceiling_color->g = -1;
+	game->mfd->ceiling_color->b = -1;
+	game->mfd->north_texture = NULL;
+	game->mfd->south_texture = NULL;
+	game->mfd->west_texture = NULL;
+	game->mfd->east_texture = NULL;
+	game->mfd->map = NULL;
+	if (get_file_data(game->mfd, fd) == false)
+	{
+		handle_error("Invalid file content");
+		free_mfd(game->mfd);
+		exit(1);
+	}
+}
