@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/06 12:46:19 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/06 12:58:02 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 15:04:40 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,16 @@ mlx_texture_t	*assign_texture(t_ray *ray)
 		break ;
 	}
 	return (texture);
+}
+
+void	convert_floor_and_ceiling_colors(t_game *game)
+{
+	game->floor_color = get_rgba(game->mfd->floor_color_config->r,
+			game->mfd->floor_color_config->g, game->mfd->floor_color_config->b,
+			255);
+	game->ceiling_color = get_rgba(game->mfd->ceiling_color_config->r,
+			game->mfd->ceiling_color_config->g,
+			game->mfd->ceiling_color_config->b, 255);
 }
 
 uint32_t	get_rgba(int r, int g, int b, int a)
