@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/06 12:56:07 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 15:15:36 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ void	init_mfd(t_game *game, char *map_file)
 	game->mfd->file = map_file;
 	game->mfd->width = 0;
 	game->mfd->height = 0;
-	game->mfd->floor_color = (t_color *)malloc(sizeof(t_color));
-	game->mfd->floor_color->r = -1;
-	game->mfd->floor_color->g = -1;
-	game->mfd->floor_color->b = -1;
-	game->mfd->ceiling_color = (t_color *)malloc(sizeof(t_color));
-	game->mfd->ceiling_color->r = -1;
-	game->mfd->ceiling_color->g = -1;
-	game->mfd->ceiling_color->b = -1;
+	game->mfd->floor_color_config = (t_color *)malloc(sizeof(t_color));
+	game->mfd->floor_color_config->r = -1;
+	game->mfd->floor_color_config->g = -1;
+	game->mfd->floor_color_config->b = -1;
+	game->mfd->ceiling_color_config = (t_color *)malloc(sizeof(t_color));
+	game->mfd->ceiling_color_config->r = -1;
+	game->mfd->ceiling_color_config->g = -1;
+	game->mfd->ceiling_color_config->b = -1;
 	game->mfd->north_texture = NULL;
 	game->mfd->south_texture = NULL;
 	game->mfd->west_texture = NULL;
@@ -95,6 +95,7 @@ void	init_game(t_game *game, char *map_file)
 	}
 	init_mfd(game, map_file);
 	init_player(game);
+	convert_floor_and_ceiling_colors(game);
 	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
 	game->ray = ray;
 	init_ray_struct(game->ray);

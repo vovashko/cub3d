@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:55:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/06 13:05:25 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 15:16:43 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ bool	check_file_content(t_map_file_data *mfd)
 {
 	if (!mfd->north_texture || !mfd->south_texture || \
 	!mfd->west_texture || !mfd->east_texture || \
-	!mfd->floor_color || !mfd->ceiling_color)
+	!mfd->floor_color_config || !mfd->ceiling_color_config)
 		handle_error("Missing essential map data");
 	// if (open(mfd->north_texture, O_RDONLY) == -1 || \
 	// open(mfd->south_texture, O_RDONLY) == -1 || \
@@ -72,8 +72,8 @@ bool	validate_map(t_map_file_data *mfd, t_player *player)
 {
 	if (!check_file_content(mfd))
 		return (false);
-	if (!check_colours_range(mfd->ceiling_color) || \
-		!check_colours_range(mfd->floor_color))
+	if (!check_colours_range(mfd->ceiling_color_config) || \
+		!check_colours_range(mfd->floor_color_config))
 		return (false);
 	if (!validate_map_enclosure(mfd->map))
 		return (false);

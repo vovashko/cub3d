@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2025/01/06 12:58:29 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 15:08:42 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ typedef struct s_map_file_data
 	char *file;
 	size_t width;
 	int height;
-	t_color *floor_color;
-	t_color *ceiling_color;
+	t_color *floor_color_config;
+	t_color *ceiling_color_config;
 	char *north_texture;
 	char *south_texture;
 	char *west_texture;
@@ -119,7 +119,8 @@ typedef struct s_game
 	mlx_image_t *wall;
 	t_player *player;
 	t_ray *ray;
-	// int *map; // remove after testing
+	uint32_t floor_color;
+	uint32_t ceiling_color;
 } t_game;
 
 void init_game(t_game *game, char *map_file);
@@ -174,10 +175,11 @@ bool is_config_line(const char *line);
 void grow_map(t_map_file_data *mfd, char *line);
 
 void raycast_and_render(t_game *game);
-u_int32_t get_rgba(int r, int g, int b, int a);
+uint32_t	get_rgba(int r, int g, int b, int a);
 char	get_map_value(char **map, int x, int y);
 mlx_texture_t	*assign_texture(t_ray *ray);
 uint32_t	get_textured_color(int x, int y, mlx_texture_t *texture);
+void	convert_floor_and_ceiling_colors(t_game *game);
 
 
 #endif
