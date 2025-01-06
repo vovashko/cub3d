@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:03:16 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/06 13:08:16 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 13:22:55 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,14 @@ void key_hooks(void *params)
 	}
 	turn_controls(game);
 	
+}
+
+void update_player(void *params)
+{
+	t_game *game = (t_game *)params;
+	if (mlx_image_to_window(game->mlx, game->player->player_img, game->player->x, game->player->y) == -1)
+	{
+		printf("Error\nFailed to draw image\n");
+		exit(1);
+	}
 }

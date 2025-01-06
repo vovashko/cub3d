@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-SRCS = main.c init.c hooks/controls.c drawing/drawing.c \
+SRCS = main.c init.c hooks/controls.c \
 	raycasting/raycaster.c  raycasting/raycaster_utils.c\
 	parsing/colors.c parsing/parser_grow_map.c parsing/parser.c  parsing/parser_utils.c\
 	validation/validate_map.c validation/validate_map_rows.c \
