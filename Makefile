@@ -1,10 +1,10 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-SRCS = main.c init.c controls.c drawing.c
-	raycasting/raycaster.c  \
+SRCS = main.c init.c hooks/controls.c drawing/drawing.c \
+	raycasting/raycaster.c  raycasting/raycaster_utils.c\
 	parsing/colors.c parsing/parser_grow_map.c parsing/parser.c  parsing/parser_utils.c\
 	validation/validate_map.c validation/validate_map_rows.c \
-	validation/validate_utils.c validation/validator.c \
+	validation/validator_utils.c validation/validator.c 
 SRCS_GNL = gnl/get_next_line.c gnl/get_next_line_utils.c
 OBJS = $(SRCS:.c=.o) $(SRCS_GNL:.c=.o)
 NAME = cub3d

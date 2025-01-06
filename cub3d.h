@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2025/01/02 16:31:52 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 12:58:29 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 
 #define WIDTH 1200
 #define HEIGHT 800
-#define TEST_MODE 0
+#define TEST_MODE 1
 #define MAX_DOF 8
 
 typedef struct s_color
@@ -108,6 +108,7 @@ typedef struct s_player
 	float dy;
 	float plane_x;
 	float plane_y;
+	char dir;
 } t_player;
 
 typedef struct s_game
@@ -118,7 +119,7 @@ typedef struct s_game
 	mlx_image_t *wall;
 	t_player *player;
 	t_ray *ray;
-	int *map; // remove after testing
+	// int *map; // remove after testing
 } t_game;
 
 void init_game(t_game *game, char *map_file);
@@ -150,7 +151,7 @@ bool check_top_and_bottom(char *line);
 bool check_valid_chars(char **map, int rows);
 // bool check_starting_pos(char **map, int rows, t_player *player);
 void draw_floor_and_ceiling(t_game *game);
-int get_rgba(int r, int g, int b, int a);
+
 
 // Adding new function references
 void handle_error(char *error);
@@ -171,5 +172,12 @@ void get_map_height(t_map_file_data *mfd, int fd);
 bool get_file_data(t_map_file_data *mfd, int fd, int map_started);
 bool is_config_line(const char *line);
 void grow_map(t_map_file_data *mfd, char *line);
+
+void raycast_and_render(t_game *game);
+u_int32_t get_rgba(int r, int g, int b, int a);
+char	get_map_value(char **map, int x, int y);
+mlx_texture_t	*assign_texture(t_ray *ray);
+uint32_t	get_textured_color(int x, int y, mlx_texture_t *texture);
+
 
 #endif

@@ -6,11 +6,11 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:06:20 by vshkonda      #+#    #+#                 */
-/*   Updated: 2024/12/18 18:18:27 by vovashko      ########   odam.nl         */
+/*   Updated: 2025/01/06 12:44:22 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void update_player(void *params)
 {

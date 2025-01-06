@@ -6,11 +6,11 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 17:23:51 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/03 16:53:19 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 13:17:03 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	init_ray(t_ray *ray, t_player *player)
 {
@@ -49,7 +49,7 @@ void	init_ray(t_ray *ray, t_player *player)
 	}
 }
 
-int	perform_dda(t_ray *ray, int *map)
+int	perform_dda(t_ray *ray, char **map)
 {
 	int	hor;
 
@@ -77,7 +77,7 @@ int	perform_dda(t_ray *ray, int *map)
 				ray->hit_orientation = 'N';
 		}
 		// Check if the ray hits a wall
-		if (get_map_value(map, ray->hit_x, ray->hit_y) == 1)
+		if (get_map_value(map, ray->hit_x, ray->hit_y) == '1')
 			return (hor);
 	}
 }
@@ -108,54 +108,8 @@ void	calculate_wall_height(t_ray *ray, int hor, t_player *player)
 		ray->wall_end = HEIGHT - 1;
 }
 
-uint32_t	get_rgba(int r, int g, int b, int a)
-{
-	return (r << 24 | g << 16 | b << 8 | a);
-}
 
-uint32_t	get_textured_color(int x, int y, mlx_texture_t *texture)
-{
-	uint32_t	base_color;
-	int32_t		r;
-	int32_t		g;
-	int32_t		b;
-	int32_t		a;
 
-	r = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel];
-	g = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel
-		+ 1];
-	b = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel
-		+ 2];
-	a = texture->pixels[(y * texture->width + x) * texture->bytes_per_pixel
-		+ 3];
-	base_color = get_rgba(r, g, b, a);
-	return (base_color);
-}
-
-mlx_texture_t	*assign_texture(t_ray *ray)
-{
-	mlx_texture_t	*texture;
-
-	switch (ray->hit_orientation)
-	{
-	case 'N':
-		texture = ray->walls->north;
-		break ;
-	case 'S':
-		texture = ray->walls->south;
-		break ;
-	case 'E':
-		texture = ray->walls->east;
-		break ;
-	case 'W':
-		texture = ray->walls->west;
-		break ;
-	default:
-		texture = ray->walls->north;
-		break ;
-	}
-	return (texture);
-}
 
 void	draw_wall_slice(t_game *game, t_ray *ray)
 {
@@ -173,10 +127,8 @@ void	draw_wall_slice(t_game *game, t_ray *ray)
 	scale = (double)current_texture->height / ray->slice_height;
 	tex_pos = (ray->wall_start - HEIGHT / 2 + ray->slice_height / 2) * scale;
 	i = 0;
-	// Draw ceiling
 	for (i = 0; i < ray->wall_start; i++)
 		mlx_put_pixel(game->background, ray->slice, i, ceiling_color);
-	// Draw wall
 	for (i = ray->wall_start; i <= ray->wall_end; i++)
 	{
 		texture_y = (int)tex_pos % (current_texture->height);
@@ -184,58 +136,21 @@ void	draw_wall_slice(t_game *game, t_ray *ray)
 		mlx_put_pixel(game->background, ray->slice, i,
 			get_textured_color(texture_x, texture_y, current_texture));
 	}
-	// Draw floor
 	for (i = ray->wall_end + 1; i < HEIGHT; i++)
 		mlx_put_pixel(game->background, ray->slice, i, floor_color);
 }
 
-int	get_map_value(int *map, int x, int y)
-{
-	return (map[y * 10 + x]); // Assuming map width is 10
-}
 
 void	raycast_and_render(t_game *game)
 {
 	int	hor;
-
 	game->ray->slice = 0;
 	while (game->ray->slice < WIDTH)
 	{
 		init_ray(game->ray, game->player);
-		hor = perform_dda(game->ray, game->map);
+		hor = perform_dda(game->ray, game->mfd->map);
 		calculate_wall_height(game->ray, hor, game->player);
 		draw_wall_slice(game, game->ray);
 		game->ray->slice++;
 	}
-}
-
-// function belows are related to hooks and game loop
-
-void	game_loop(void *param)
-{
-	t_game	*game;
-
-	game = param;
-	key_hooks(game);
-	update_player(game);
-	raycast_and_render(game);
-}
-
-int	main(void)
-{
-	t_game *game = (t_game *)malloc(sizeof(t_game));
-	init_game(game, "map.cub");
-
-	if (mlx_image_to_window(game->mlx, game->background, 0, 0) == -1)
-	{
-		printf("Error\nFailed to draw image\n");
-		exit(1);
-	}
-	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
-	// stretch image based on window size changing
-	mlx_loop_hook(game->mlx, game_loop, game);
-	mlx_loop(game->mlx);
-	mlx_terminate(game->mlx);
-
-	return (0);
 }

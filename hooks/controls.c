@@ -6,13 +6,11 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/27 16:03:16 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/02 14:06:13 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 13:08:16 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-
-void render(void *param);
+#include "../cub3d.h"
 
 static void turn_controls(t_game *game)
 {
@@ -44,6 +42,7 @@ static void turn_controls(t_game *game)
 
 void key_hooks(void *params)
 {
+	
     t_game *game = (t_game *)params;
     if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
         mlx_close_window(game->mlx);
@@ -68,4 +67,5 @@ void key_hooks(void *params)
 		game->player->y -= game->player->dx;
 	}
 	turn_controls(game);
+	
 }
