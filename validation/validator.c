@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:55:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/06 16:51:09 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/08 13:22:34 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,14 @@ bool	check_file_content(t_map_file_data *mfd)
 	!mfd->west_texture || !mfd->east_texture || \
 	!mfd->floor_color_config || !mfd->ceiling_color_config)
 		handle_error("Missing essential map data");
-	// if (open(mfd->north_texture, O_RDONLY) == -1 || \
-	// open(mfd->south_texture, O_RDONLY) == -1 || \
-	// open(mfd->east_texture, O_RDONLY) == -1 || \
-	// open(mfd->west_texture, O_RDONLY) == -1)
-	// 	handle_error("Could not open texture files");
+	if (open(ft_strtrim(mfd->south_texture, " \t\n"), O_RDONLY) == -1)
+		handle_error("Could not open north texture file");
+	if (open(ft_strtrim(mfd->south_texture, " \t\n"), O_RDONLY) == -1)
+	 	handle_error("Could not open south texture file");
+	if (open(ft_strtrim(mfd->west_texture, " \t\n"), O_RDONLY) == -1)
+	 	handle_error("Could not west south texture file");
+	if (open(ft_strtrim(mfd->east_texture, " \t\n"), O_RDONLY) == -1)
+	 	handle_error("Could not open east texture file");
 	return (true);
 }
 
