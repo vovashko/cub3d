@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:22:56 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/06 15:16:08 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/08 14:20:51 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,17 @@ void parse_config_line(t_map_file_data *mfd, char *line)
 	char *trimmed_line;
 
 	trimmed_line = skip_spaces(line);
-	if (ft_strncmp(trimmed_line, "NO ", 3) == 0)
-		mfd->north_texture = ft_strdup(check_and_assign_texture(mfd->north_texture, skip_spaces(&trimmed_line[3])));
-	else if (ft_strncmp(trimmed_line, "SO ", 3) == 0)
-		mfd->south_texture = ft_strdup(check_and_assign_texture(mfd->south_texture, skip_spaces(&trimmed_line[3])));
-	else if (ft_strncmp(trimmed_line, "WE ", 3) == 0)
-		mfd->west_texture = ft_strdup(check_and_assign_texture(mfd->west_texture, skip_spaces(&trimmed_line[3])));
-	else if (ft_strncmp(trimmed_line, "EA ", 3) == 0)
-		mfd->east_texture = ft_strdup(check_and_assign_texture(mfd->east_texture, skip_spaces(&trimmed_line[3])));
-	else if (ft_strncmp(trimmed_line, "F ", 2) == 0)
+	if (ft_strncmp(trimmed_line, "NO", 2) == 0)
+		mfd->north_texture = ft_strdup(check_and_assign_texture(mfd->north_texture, skip_spaces(&trimmed_line[2])));
+	else if (ft_strncmp(trimmed_line, "SO", 2) == 0)
+		mfd->south_texture = ft_strdup(check_and_assign_texture(mfd->south_texture, skip_spaces(&trimmed_line[2])));
+	else if (ft_strncmp(trimmed_line, "WE", 2) == 0)
+		mfd->west_texture = ft_strdup(check_and_assign_texture(mfd->west_texture, skip_spaces(&trimmed_line[2])));
+	else if (ft_strncmp(trimmed_line, "EA", 2) == 0)
+		mfd->east_texture = ft_strdup(check_and_assign_texture(mfd->east_texture, skip_spaces(&trimmed_line[2])));
+	else if (ft_strncmp(trimmed_line, "F", 1) == 0)
 		get_color(&trimmed_line[2], mfd->floor_color_config);
-	else if (ft_strncmp(trimmed_line, "C ", 2) == 0)
+	else if (ft_strncmp(trimmed_line, "C", 1) == 0)
 		get_color(&trimmed_line[2], mfd->ceiling_color_config);
 	else
 		handle_error("Invalid configuration line");
