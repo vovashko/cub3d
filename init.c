@@ -6,45 +6,13 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/06 16:50:47 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/08 15:06:49 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void update_player_start_dir(t_player *player)
-{
-	if (player->dir == 'N')
-	{
-		player->plane_x = 0.66;
-		player->plane_y = 0;
-		player->dx = 0;
-		player->dy = -1;
-	}
-	else if (player->dir == 'S')
-	{
-		player->plane_x = -0.66;
-		player->plane_y = 0;
-		player->dx = 0;
-		player->dy = 1;
-	}
-	else if (player->dir == 'W')
-	{
-		player->plane_x = 0;
-		player->plane_y = -0.66;
-		player->dx = -1;
-		player->dy = 0;
-	}
-	else if (player->dir == 'E')
-	{
-		player->plane_x = 0;
-		player->plane_y = 0.66;
-		player->dx = 1;
-		player->dy = 0;
-	}
-}
-
-void init_player(t_game *game)
+void	init_player(t_game *game)
 {
 	game->player = (t_player *)malloc(sizeof(t_player));
 	game->player->player_img = mlx_new_image(game->mlx, 1, 1);
@@ -67,11 +35,9 @@ void init_player(t_game *game)
 	game->player->dy = 0;
 }
 
-void	init_mfd(t_game *game, char *map_file)
+void	init_mfd(t_game *game, int fd)
 {
-	int fd = open(map_file, O_RDONLY);
 	game->mfd = (t_map_file_data *)malloc(sizeof(t_map_file_data));
-	game->mfd->file = map_file;
 	game->mfd->width = 0;
 	game->mfd->height = 0;
 	game->mfd->floor_color_config = (t_color *)malloc(sizeof(t_color));
@@ -88,14 +54,10 @@ void	init_mfd(t_game *game, char *map_file)
 	game->mfd->east_texture = NULL;
 	game->mfd->map = NULL;
 	if (get_file_data(game->mfd, fd, 0) == false)
-	{
 		handle_error("Invalid file content");
-		free_mfd(game->mfd);
-		exit(1);
-	}
 }
 
-void init_ray_struct(t_ray *ray, t_map_file_data *mfd)
+void	init_ray_struct(t_ray *ray, t_map_file_data *mfd)
 {
 	ray->slice = 0;
 	ray->dx = 0;
@@ -112,24 +74,27 @@ void init_ray_struct(t_ray *ray, t_map_file_data *mfd)
 	ray->walls = (t_walls *)malloc(sizeof(t_walls));
 	ray->walls->north = mlx_load_png("textures/north.png");
 	ray->walls->south = mlx_load_png("textures/south.png");
-	ray->walls->west =mlx_load_png("textures/west.png");
-	ray->walls->east =mlx_load_png("textures/east.png");
+	ray->walls->west = mlx_load_png("textures/west.png");
+	ray->walls->east = mlx_load_png("textures/east.png");
 	(void)mfd;
 }
 
 void	init_game(t_game *game, char *map_file)
 {
+	t_ray	*ray;
+	int		fd;
+
+	fd = open(map_file, O_RDONLY);
+	if (fd == -1)
+		handle_error("Failed to open map file");
 	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", true);
 	game->background = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	if (mlx_image_to_window(game->mlx, game->background, 0, 0) == -1)
-	{
-		printf("Error\nFailed to draw image\n");
-		exit(1);
-	}
+		handle_error("Failed to draw background");
 	init_player(game);
-	init_mfd(game, map_file);
+	init_mfd(game, fd);
 	convert_floor_and_ceiling_colors(game);
-	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
+	ray = (t_ray *)malloc(sizeof(t_ray));
 	game->ray = ray;
 	init_ray_struct(game->ray, game->mfd);
 }
