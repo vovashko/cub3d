@@ -20,6 +20,7 @@ static int	check_player_position(char **map, int x, int y, t_player *player)
 		player->y = y + 0.5;
 		player->dir = map[y][x];
 		map[y][x] = '0';
+		update_player_start_dir(player);
 		return (1);
 	}
 	return (0);
@@ -57,7 +58,7 @@ bool	check_file_content(t_map_file_data *mfd)
 {
 	if (!mfd->north_texture || !mfd->south_texture || \
 	!mfd->west_texture || !mfd->east_texture || \
-	!mfd->floor_color || !mfd->ceiling_color)
+	!mfd->floor_color_config || !mfd->ceiling_color_config)
 		handle_error("Missing essential map data");
 	if (open(ft_strtrim(mfd->south_texture, " \t\n"), O_RDONLY) == -1)
 		handle_error("Could not open north texture file");
@@ -75,8 +76,8 @@ bool	validate_map(t_map_file_data *mfd, t_player *player)
 {
 	if (!check_file_content(mfd))
 		return (false);
-	if (!check_colours_range(mfd->ceiling_color) || \
-		!check_colours_range(mfd->floor_color))
+	if (!check_colours_range(mfd->ceiling_color_config) || \
+		!check_colours_range(mfd->floor_color_config))
 		return (false);
 	if (!validate_map_enclosure(mfd->map))
 		return (false);

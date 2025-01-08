@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:05:11 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/02 10:13:09 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/06 15:06:26 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,6 @@ bool	check_colours_range(t_color *color)
 		return (false);
 	if (color->b < 0 || color->b > 255)
 		return (false);
+	
 	return (true);
 }

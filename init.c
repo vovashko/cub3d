@@ -6,11 +6,43 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/06 12:56:07 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 16:50:47 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void update_player_start_dir(t_player *player)
+{
+	if (player->dir == 'N')
+	{
+		player->plane_x = 0.66;
+		player->plane_y = 0;
+		player->dx = 0;
+		player->dy = -1;
+	}
+	else if (player->dir == 'S')
+	{
+		player->plane_x = -0.66;
+		player->plane_y = 0;
+		player->dx = 0;
+		player->dy = 1;
+	}
+	else if (player->dir == 'W')
+	{
+		player->plane_x = 0;
+		player->plane_y = -0.66;
+		player->dx = -1;
+		player->dy = 0;
+	}
+	else if (player->dir == 'E')
+	{
+		player->plane_x = 0;
+		player->plane_y = 0.66;
+		player->dx = 1;
+		player->dy = 0;
+	}
+}
 
 void init_player(t_game *game)
 {
@@ -42,14 +74,14 @@ void	init_mfd(t_game *game, char *map_file)
 	game->mfd->file = map_file;
 	game->mfd->width = 0;
 	game->mfd->height = 0;
-	game->mfd->floor_color = (t_color *)malloc(sizeof(t_color));
-	game->mfd->floor_color->r = -1;
-	game->mfd->floor_color->g = -1;
-	game->mfd->floor_color->b = -1;
-	game->mfd->ceiling_color = (t_color *)malloc(sizeof(t_color));
-	game->mfd->ceiling_color->r = -1;
-	game->mfd->ceiling_color->g = -1;
-	game->mfd->ceiling_color->b = -1;
+	game->mfd->floor_color_config = (t_color *)malloc(sizeof(t_color));
+	game->mfd->floor_color_config->r = -1;
+	game->mfd->floor_color_config->g = -1;
+	game->mfd->floor_color_config->b = -1;
+	game->mfd->ceiling_color_config = (t_color *)malloc(sizeof(t_color));
+	game->mfd->ceiling_color_config->r = -1;
+	game->mfd->ceiling_color_config->g = -1;
+	game->mfd->ceiling_color_config->b = -1;
 	game->mfd->north_texture = NULL;
 	game->mfd->south_texture = NULL;
 	game->mfd->west_texture = NULL;
@@ -63,7 +95,7 @@ void	init_mfd(t_game *game, char *map_file)
 	}
 }
 
-void init_ray_struct(t_ray *ray)
+void init_ray_struct(t_ray *ray, t_map_file_data *mfd)
 {
 	ray->slice = 0;
 	ray->dx = 0;
@@ -82,6 +114,7 @@ void init_ray_struct(t_ray *ray)
 	ray->walls->south = mlx_load_png("textures/south.png");
 	ray->walls->west =mlx_load_png("textures/west.png");
 	ray->walls->east =mlx_load_png("textures/east.png");
+	(void)mfd;
 }
 
 void	init_game(t_game *game, char *map_file)
@@ -93,9 +126,10 @@ void	init_game(t_game *game, char *map_file)
 		printf("Error\nFailed to draw image\n");
 		exit(1);
 	}
-	init_mfd(game, map_file);
 	init_player(game);
+	init_mfd(game, map_file);
+	convert_floor_and_ceiling_colors(game);
 	t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
 	game->ray = ray;
-	init_ray_struct(game->ray);
+	init_ray_struct(game->ray, game->mfd);
 }

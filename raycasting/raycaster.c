@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 17:23:51 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/06 13:17:03 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/06 15:05:00 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	perform_dda(t_ray *ray, char **map)
 				ray->hit_orientation = 'N';
 		}
 		// Check if the ray hits a wall
-		if (get_map_value(map, ray->hit_x, ray->hit_y) == '1')
+		if (map[ray->hit_y][ray->hit_x] == '1')
 			return (hor);
 	}
 }
@@ -120,15 +120,13 @@ void	draw_wall_slice(t_game *game, t_ray *ray)
 	double			tex_pos;
 	mlx_texture_t	*current_texture;
 
-	int floor_color = get_rgba(245, 121, 3, 255);    // Orange
-	int ceiling_color = get_rgba(39, 245, 236, 255); // Cyan
 	current_texture = assign_texture(ray);
 	texture_x = (ray->hit_portion * current_texture->width);
 	scale = (double)current_texture->height / ray->slice_height;
 	tex_pos = (ray->wall_start - HEIGHT / 2 + ray->slice_height / 2) * scale;
 	i = 0;
 	for (i = 0; i < ray->wall_start; i++)
-		mlx_put_pixel(game->background, ray->slice, i, ceiling_color);
+		mlx_put_pixel(game->background, ray->slice, i, game->ceiling_color);
 	for (i = ray->wall_start; i <= ray->wall_end; i++)
 	{
 		texture_y = (int)tex_pos % (current_texture->height);
@@ -137,7 +135,7 @@ void	draw_wall_slice(t_game *game, t_ray *ray)
 			get_textured_color(texture_x, texture_y, current_texture));
 	}
 	for (i = ray->wall_end + 1; i < HEIGHT; i++)
-		mlx_put_pixel(game->background, ray->slice, i, floor_color);
+		mlx_put_pixel(game->background, ray->slice, i, game->floor_color);
 }
 
 

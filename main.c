@@ -27,8 +27,8 @@ void free_mfd(t_map_file_data *mfd)
 	free(mfd->south_texture);
 	free(mfd->west_texture);
 	free(mfd->east_texture);
-	free(mfd->floor_color);
-	free(mfd->ceiling_color);
+	free(mfd->floor_color_config);
+	free(mfd->ceiling_color_config);
 	free(mfd);
 }
 
@@ -65,8 +65,6 @@ int main(int argc, char **argv)
         free_mfd(game->mfd);
         return EXIT_FAILURE;
     }
-
-    printf("Map is valid.\n");
 	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
 	// stretch image based on window size changing
 	mlx_loop_hook(game->mlx, game_loop, game);

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:22:56 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/02 12:48:43 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/06 15:16:08 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ void parse_config_line(t_map_file_data *mfd, char *line)
 	else if (ft_strncmp(trimmed_line, "EA ", 3) == 0)
 		mfd->east_texture = ft_strdup(check_and_assign_texture(mfd->east_texture, skip_spaces(&trimmed_line[3])));
 	else if (ft_strncmp(trimmed_line, "F ", 2) == 0)
-		get_color(&trimmed_line[2], mfd->floor_color);
+		get_color(&trimmed_line[2], mfd->floor_color_config);
 	else if (ft_strncmp(trimmed_line, "C ", 2) == 0)
-		get_color(&trimmed_line[2], mfd->ceiling_color);
+		get_color(&trimmed_line[2], mfd->ceiling_color_config);
 	else
 		handle_error("Invalid configuration line");
 }
