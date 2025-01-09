@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:22:56 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/09 14:39:47 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/09 15:27:26 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,14 @@ void	parse_config_line(t_map_file_data *mfd, char *line)
 		handle_error("Invalid configuration line");
 }
 
+/*
+	i'll the comment above the function.
+	the commented line inside the function free(trimmed_line) 
+	was causing the double free. If I understand it correctly I never copied
+	data in to it, it just pointed to the same location and once line
+	was freed there was no reason to free trimmed_line. That's my guess and now
+	there's no issue when running cub3d with maps/bad/file_letter_end.cub
+*/
 static void	skip_empty_lines(int map_started, int fd)
 {
 	char	*line;
@@ -59,12 +67,14 @@ static void	skip_empty_lines(int map_started, int fd)
 		line = get_next_line(fd);
 		if (line)
 			trimmed_line = skip_spaces(line);
-		if (line && trimmed_line && !ft_strchr(trimmed_line, '\n'))
+		if (line && trimmed_line && ft_strlen(trimmed_line) == 1 \
+		&& trimmed_line[0] == '\n')
 		{
 			free(line);
-			free(trimmed_line);
+			// free(trimmed_line);
 			handle_error("Empty lines found in map section\n");
 		}
+		free(line);
 	}
 }
 
