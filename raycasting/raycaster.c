@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 17:23:51 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/06 15:05:00 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/08 15:35:53 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ void	init_ray(t_ray *ray, t_player *player)
 		ray->delta_x = 1e30;
 	else
 		ray->delta_x = fabs(1 / ray->dx);
+	assign_starting_dist(ray, player);
+}
+
+void	assign_starting_dist(t_ray *ray, t_player *player)
+{
 	if (ray->dx < 0)
 	{
 		ray->step_dir_x = -1;
@@ -49,11 +54,8 @@ void	init_ray(t_ray *ray, t_player *player)
 	}
 }
 
-int	perform_dda(t_ray *ray, char **map)
+int	perform_dda(t_ray *ray, char **map, int hor)
 {
-	int	hor;
-
-	hor = 0;
 	while (1)
 	{
 		if (ray->dist_x < ray->dist_y)
@@ -76,7 +78,6 @@ int	perform_dda(t_ray *ray, char **map)
 			else
 				ray->hit_orientation = 'N';
 		}
-		// Check if the ray hits a wall
 		if (map[ray->hit_y][ray->hit_x] == '1')
 			return (hor);
 	}
@@ -108,47 +109,19 @@ void	calculate_wall_height(t_ray *ray, int hor, t_player *player)
 		ray->wall_end = HEIGHT - 1;
 }
 
-
-
-
-void	draw_wall_slice(t_game *game, t_ray *ray)
-{
-	int				i;
-	int				texture_x;
-	int				texture_y;
-	double			scale;
-	double			tex_pos;
-	mlx_texture_t	*current_texture;
-
-	current_texture = assign_texture(ray);
-	texture_x = (ray->hit_portion * current_texture->width);
-	scale = (double)current_texture->height / ray->slice_height;
-	tex_pos = (ray->wall_start - HEIGHT / 2 + ray->slice_height / 2) * scale;
-	i = 0;
-	for (i = 0; i < ray->wall_start; i++)
-		mlx_put_pixel(game->background, ray->slice, i, game->ceiling_color);
-	for (i = ray->wall_start; i <= ray->wall_end; i++)
-	{
-		texture_y = (int)tex_pos % (current_texture->height);
-		tex_pos += scale;
-		mlx_put_pixel(game->background, ray->slice, i,
-			get_textured_color(texture_x, texture_y, current_texture));
-	}
-	for (i = ray->wall_end + 1; i < HEIGHT; i++)
-		mlx_put_pixel(game->background, ray->slice, i, game->floor_color);
-}
-
-
 void	raycast_and_render(t_game *game)
 {
-	int	hor;
+	int				hor;
+	mlx_texture_t	*current_texture;
+
 	game->ray->slice = 0;
 	while (game->ray->slice < WIDTH)
 	{
 		init_ray(game->ray, game->player);
-		hor = perform_dda(game->ray, game->mfd->map);
+		hor = perform_dda(game->ray, game->mfd->map, 0);
 		calculate_wall_height(game->ray, hor, game->player);
-		draw_wall_slice(game, game->ray);
+		current_texture = assign_texture(game->ray);
+		draw_wall_slice(game, game->ray, current_texture);
 		game->ray->slice++;
 	}
 }

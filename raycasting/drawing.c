@@ -1,44 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   raycaster_utils.c                                  :+:    :+:            */
+/*   drawing.c                                          :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/06 12:46:19 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/06 15:04:40 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/08 15:35:56 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-char	get_map_value(char **map, int x, int y)
-{
-	return (map[y][x]);
-}
-
 mlx_texture_t	*assign_texture(t_ray *ray)
 {
 	mlx_texture_t	*texture;
 
-	switch (ray->hit_orientation)
-	{
-	case 'N':
+	if (ray->hit_orientation == 'N')
 		texture = ray->walls->north;
-		break ;
-	case 'S':
+	else if (ray->hit_orientation == 'S')
 		texture = ray->walls->south;
-		break ;
-	case 'E':
-		texture = ray->walls->east;
-		break ;
-	case 'W':
+	else if (ray->hit_orientation == 'W')
 		texture = ray->walls->west;
-		break ;
-	default:
-		texture = ray->walls->north;
-		break ;
-	}
+	else
+		texture = ray->walls->east;
 	return (texture);
 }
 
@@ -74,4 +59,30 @@ uint32_t	get_textured_color(int x, int y, mlx_texture_t *texture)
 		+ 3];
 	base_color = get_rgba(r, g, b, a);
 	return (base_color);
+}
+
+void	draw_wall_slice(t_game *game, t_ray *ray,
+		mlx_texture_t *current_texture)
+{
+	int		i;
+	int		texture_x;
+	int		texture_y;
+	double	scale;
+	double	tex_pos;
+
+	texture_x = (ray->hit_portion * current_texture->width);
+	scale = (double)current_texture->height / ray->slice_height;
+	tex_pos = (ray->wall_start - HEIGHT / 2 + ray->slice_height / 2) * scale;
+	i = 0;
+	while (i < ray->wall_start)
+		mlx_put_pixel(game->background, ray->slice, i++, game->ceiling_color);
+	while (i <= ray->wall_end)
+	{
+		texture_y = (int)tex_pos % (current_texture->height);
+		tex_pos += scale;
+		mlx_put_pixel(game->background, ray->slice, i++,
+			get_textured_color(texture_x, texture_y, current_texture));
+	}
+	while (i < HEIGHT)
+		mlx_put_pixel(game->background, ray->slice, i++, game->floor_color);
 }
