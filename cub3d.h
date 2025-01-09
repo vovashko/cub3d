@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2025/01/08 15:34:01 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/09 10:32:37 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,26 +71,26 @@ typedef struct s_walls
 
 typedef struct s_ray
 {
-	int slice;              // Ray slice (column)
-	float dx;               // Ray x direction
-	float dy;               // Ray y direction
-	float delta_x;          // Step size in x-direction
-	float delta_y;          // Step size in y-direction
-	float dist_x;           // Distance to next x gridline
-	float dist_y;           // Distance to next y gridline
-	int hit_x;              // Map x position of wall hit
-	int hit_y;              // Map y position of wall hit
-	int step_dir_x;         // Direction of step in x (-1 or 1)
-	int step_dir_y;         // Direction of step in y (-1 or 1)
-	double hit_distance;    // Final distance to the wall hit
-	float hit_portion;      // Texture alignment
-	char hit_orientation;   // Orientation of the wall hit
-	u_int32_t slice_height; // Height of the wall slice
-	u_int32_t texture_x;    // Texture x coordinate
-	double camera_x;        // Camera x coordinate
-	int wall_start;         // Start of the wall slice
-	int wall_end;           // End of the wall slice
-	t_walls			*walls;
+	int			slice;              // Ray slice (column)
+	float		dx;               // Ray x direction
+	float		dy;               // Ray y direction
+	float		delta_x;          // Step size in x-direction
+	float		delta_y;          // Step size in y-direction
+	float		dist_x;           // Distance to next x gridline
+	float		dist_y;           // Distance to next y gridline
+	int			hit_x;              // Map x position of wall hit
+	int			hit_y;              // Map y position of wall hit
+	int			step_dir_x;         // Direction of step in x (-1 or 1)
+	int			step_dir_y;         // Direction of step in y (-1 or 1)
+	double		hit_distance;    // Final distance to the wall hit
+	float		hit_portion;      // Texture alignment
+	char		hit_orientation;   // Orientation of the wall hit
+	u_int32_t	slice_height; // Height of the wall slice
+	u_int32_t	texture_x;    // Texture x coordinate
+	double		camera_x;        // Camera x coordinate
+	int			wall_start;         // Start of the wall slice
+	int			wall_end;           // End of the wall slice
+	t_walls		*walls;
 }					t_ray;
 
 typedef struct s_render
@@ -144,6 +144,8 @@ bool				check_enclosure(char **map, int rows, size_t cols);
 bool				check_top_and_bottom(char *line);
 bool				check_valid_chars(char **map, int rows);
 void				draw_floor_and_ceiling(t_game *game);
+void				draw_wall_slice(t_game *game, t_ray *ray, \
+					mlx_texture_t *current_texture);
 
 // Adding new function references
 void				handle_error(char *error);

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:16:23 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/08 13:59:07 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/09 10:07:56 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ void	get_map_height(t_map_file_data *mfd, int fd)
 
 bool	is_config_line(const char *line)
 {
-	if (ft_strncmp(line, "NO", 2) == 0 ||
-		ft_strncmp(line, "SO", 2) == 0 ||
-		ft_strncmp(line, "WE", 2) == 0 ||
-		ft_strncmp(line, "EA", 2) == 0 ||
-		ft_strncmp(line, "F", 1) == 0 ||
+	if ((ft_strncmp(line, "NO", 2) == 0) || \
+		ft_strncmp(line, "SO", 2) == 0 || \
+		ft_strncmp(line, "WE", 2) == 0 || \
+		ft_strncmp(line, "EA", 2) == 0 || \
+		ft_strncmp(line, "F", 1) == 0 || \
 		ft_strncmp(line, "C", 1) == 0)
 		return (true);
 	return (false);
