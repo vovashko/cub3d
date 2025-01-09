@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2025/01/06 16:51:34 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/09 11:31:01 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,9 @@ mlx_texture_t	*assign_texture(t_ray *ray);
 uint32_t	get_textured_color(int x, int y, mlx_texture_t *texture);
 void	convert_floor_and_ceiling_colors(t_game *game);
 void update_player_start_dir(t_player *player);
+void	draw_wall_slice(t_game *game, t_ray *ray,
+		mlx_texture_t *current_texture);
+void	assign_starting_dist(t_ray *ray, t_player *player);
 
 
 #endif
