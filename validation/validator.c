@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:55:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/08 14:23:32 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/09 11:40:49 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static int	check_player_position(char **map, int x, int y, t_player *player)
 		player->dir = map[y][x];
 		map[y][x] = '0';
 		update_player_start_dir(player);
+		update_plane_start_dir(player);
 		return (1);
 	}
 	return (0);
