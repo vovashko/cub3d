@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/08 15:06:49 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/10 12:52:09 by vovashko      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,11 @@ void	init_ray_struct(t_ray *ray, t_map_file_data *mfd)
 	ray->step_dir_y = 0;
 	ray->hit_portion = 0;
 	ray->walls = (t_walls *)malloc(sizeof(t_walls));
-	ray->walls->north = mlx_load_png("textures/north.png");
-	ray->walls->south = mlx_load_png("textures/south.png");
-	ray->walls->west = mlx_load_png("textures/west.png");
-	ray->walls->east = mlx_load_png("textures/east.png");
+	printf("north_texture: |%s|\n", mfd->north_texture);
+	ray->walls->north = mlx_load_png(mfd->north_texture);
+	ray->walls->south = mlx_load_png(mfd->south_texture);
+	ray->walls->west = mlx_load_png(mfd->west_texture);
+	ray->walls->east = mlx_load_png(mfd->east_texture);
 	(void)mfd;
 }
 
