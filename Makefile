@@ -2,7 +2,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 SRCS = main.c init.c utils.c hooks/controls.c \
 	raycasting/raycaster.c  raycasting/drawing.c\
-	parsing/colors.c parsing/parser_grow_map.c parsing/parser.c  parsing/parser_utils.c\
+	parsing/colors.c parsing/parser_grow_map.c parsing/parser.c  parsing/parser_utils.c parsing/parser_extended.c\
 	validation/validate_map.c validation/validate_map_rows.c \
 	validation/validator_utils.c validation/validator.c 
 SRCS_GNL = gnl/get_next_line.c gnl/get_next_line_utils.c

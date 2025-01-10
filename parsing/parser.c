@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:22:56 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/09 10:23:58 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/09 14:39:47 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	skip_empty_lines(int map_started, int fd)
 	}
 }
 
-static bool	process_empty_line(int map_started, int fd, char *line)
+bool	process_empty_line(int map_started, int fd, char *line)
 {
 	if (*line == '\n')
 	{
@@ -90,26 +90,13 @@ static bool	process_empty_line(int map_started, int fd, char *line)
 bool	get_file_data(t_map_file_data *mfd, int fd, int map_started)
 {
 	char	*line;
-	char	*trimmed_line;
 
-	// line = get_next_line(fd);
-	while ((line = get_next_line(fd)))
+	line = get_next_line(fd);
+	while (line)
 	{
-		trimmed_line = skip_spaces(line);
-		if (process_empty_line(map_started, fd, line))
-			continue ;
-		if (is_config_line(trimmed_line) && !map_started)
-			parse_config_line(mfd, trimmed_line);
-		else if (ft_strchr("01NSEW", *trimmed_line))
-		{
-			if (!map_started)
-				map_started = 1;
-			grow_map(mfd, trimmed_line);
-		}
-		else
-			return (handle_error("Invalid line encountered"), false);
-		free(line);
-		// line = get_next_line(fd);
+		if (process_line(mfd, &map_started, fd, line) == false)
+			return (false);
+		line = get_next_line(fd);
 	}
 	if (!map_started)
 		return (handle_error("Map section not found"), false);
