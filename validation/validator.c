@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:55:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/09 11:40:49 by vovashko      ########   odam.nl         */
+/*   Updated: 2025/01/10 13:31:41 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,6 @@ bool	check_file_content(t_map_file_data *mfd)
 	!mfd->west_texture || !mfd->east_texture || \
 	!mfd->floor_color_config || !mfd->ceiling_color_config)
 		handle_error("Missing essential map data");
-	mfd->north_texture = ft_strtrim(mfd->north_texture, " \t\n");
-	mfd->south_texture = ft_strtrim(mfd->south_texture, " \t\n");
-	mfd->east_texture = ft_strtrim(mfd->east_texture, " \t\n");
-	mfd->west_texture = ft_strtrim(mfd->west_texture, " \t\n");
 	if (open(mfd->north_texture, O_RDONLY) == -1)
 		handle_error("Could not open north texture file");
 	if (open(mfd->south_texture, O_RDONLY) == -1)
