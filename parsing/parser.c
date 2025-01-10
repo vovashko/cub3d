@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:22:56 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/09 15:27:26 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/10 13:31:07 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static char	*check_and_assign_texture(char *texture, char *trimmed_line)
 {
 	if (texture == NULL)
-		return (trimmed_line);
+		return (ft_strtrim(trimmed_line, " \t\n"));
 	else
 	{
 		handle_error("Texture already exists and no duplicated are allowed");
