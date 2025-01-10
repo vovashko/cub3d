@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:55:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/10 13:31:41 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/10 14:05:11 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,19 @@ bool	validate_player_presence(char **map, t_player *player)
 	return (true);
 }
 
+static bool	check_texture_extention(t_map_file_data *mfd)
+{
+	if (!ft_strnstr(mfd->north_texture, ".png", ft_strlen(mfd->north_texture)))
+		return (false);
+	if (!ft_strnstr(mfd->south_texture, ".png", ft_strlen(mfd->south_texture)))
+		return (false);
+	if (!ft_strnstr(mfd->east_texture, ".png", ft_strlen(mfd->east_texture)))
+		return (false);
+	if (!ft_strnstr(mfd->west_texture, ".png", ft_strlen(mfd->west_texture)))
+		return (false);
+	return (true);
+}
+
 // Validate file content
 bool	check_file_content(t_map_file_data *mfd)
 {
@@ -61,6 +74,8 @@ bool	check_file_content(t_map_file_data *mfd)
 	!mfd->west_texture || !mfd->east_texture || \
 	!mfd->floor_color_config || !mfd->ceiling_color_config)
 		handle_error("Missing essential map data");
+	if (check_texture_extention(mfd) == false)
+		handle_error("Wrong extension for the texture");
 	if (open(mfd->north_texture, O_RDONLY) == -1)
 		handle_error("Could not open north texture file");
 	if (open(mfd->south_texture, O_RDONLY) == -1)
