@@ -66,18 +66,14 @@ int main(int argc, char **argv)
 
     if (argc != 2)
     {
-        fprintf(stderr, "Usage: ./cub3d <map.cub>\n");
+        printf("Usage: ./cub3d <map.cub>\n");
         return EXIT_FAILURE;
     }
 	t_game* game = (t_game *)malloc(sizeof(t_game));
     init_game(game, argv[1]);
 
     if (!validate_map(game->mfd, game->player))
-    {
-        printf("Map validation failed.\n");
-        free_mfd(game->mfd);
-        return EXIT_FAILURE;
-    }
+        handle_error("Invalid map");
 	init_ray_struct(game->ray, game->mfd);
 	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
 	// stretch image based on window size changing
