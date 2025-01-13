@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:42:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/02 12:49:42 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/13 14:03:40 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 static void	initialize_rows(char **map, int *i, \
 char **row_on_top, char **row_on_bottom)
 {
+	
+	
 	*row_on_top = NULL;
 	*row_on_bottom = NULL;
 	if (i > 0)

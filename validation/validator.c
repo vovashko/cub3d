@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:55:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/10 14:16:51 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/13 13:03:16 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,13 @@ static bool	check_texture_extention(t_map_file_data *mfd)
 	south = ft_strlen(mfd->south_texture);
 	east = ft_strlen(mfd->east_texture);
 	west = ft_strlen(mfd->west_texture);
-	if (!ft_strnstr(mfd->north_texture, ".png", north) && \
-	!ft_strnstr(mfd->north_texture, ".xpm", north))
+	if (!ft_strnstr(mfd->north_texture, ".png", north))
 		return (false);
-	if (!ft_strnstr(mfd->south_texture, ".png", south) && \
-	!ft_strnstr(mfd->south_texture, ".xpm", south))
+	if (!ft_strnstr(mfd->south_texture, ".png", south))
 		return (false);
-	if (!ft_strnstr(mfd->east_texture, ".png", east) && \
-	!ft_strnstr(mfd->east_texture, ".xpm", east))
+	if (!ft_strnstr(mfd->east_texture, ".png", east))
 		return (false);
-	if (!ft_strnstr(mfd->west_texture, ".png", west) && \
-	!ft_strnstr(mfd->west_texture, ".xpm", west))
+	if (!ft_strnstr(mfd->west_texture, ".png", west))
 		return (false);
 	return (true);
 }

@@ -12,6 +12,19 @@
 
 #include "cub3d.h"
 
+void free_game(t_game *game)
+{
+	mlx_delete_texture(game->ray->walls->north);
+	mlx_delete_texture(game->ray->walls->south);
+	mlx_delete_texture(game->ray->walls->west);
+	mlx_delete_texture(game->ray->walls->east);
+	free(game->ray->walls);
+	free(game->ray);
+	free_mfd(game->mfd);
+	free_player(game->player);
+	free(game);
+}
+
 void free_mfd(t_map_file_data *mfd)
 {
 	int i;
@@ -65,14 +78,13 @@ int main(int argc, char **argv)
         free_mfd(game->mfd);
         return EXIT_FAILURE;
     }
+	init_ray_struct(game->ray, game->mfd);
 	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
 	// stretch image based on window size changing
 	mlx_loop_hook(game->mlx, game_loop, game);
 	mlx_loop(game->mlx);
 	mlx_terminate(game->mlx);
-
-    free_mfd(game->mfd);
-
+    free_game(game);
     return EXIT_SUCCESS;
 }
 
