@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:55:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/13 13:03:16 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/13 14:41:26 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ bool	check_file_content(t_map_file_data *mfd)
 	!mfd->floor_color_config || !mfd->ceiling_color_config)
 		handle_error("Missing essential map data");
 	if (check_texture_extention(mfd) == false)
-		handle_error("Wrong extension for the texture");
+		handle_error("Wrong extension for the texture. Expected .png");
 	if (open(mfd->north_texture, O_RDONLY) == -1)
 		handle_error("Could not open north texture file");
 	if (open(mfd->south_texture, O_RDONLY) == -1)
