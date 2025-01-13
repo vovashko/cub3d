@@ -1,18 +1,29 @@
-// /* ************************************************************************** */
-// /*                                                                            */
-// /*                                                        ::::::::            */
-// /*   main.c                                             :+:    :+:            */
-// /*                                                     +:+                    */
-// /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
-// /*                                                   +#+                      */
-// /*   Created: 2024/11/25 13:46:29 by vshkonda      #+#    #+#                 */
-// /*   Updated: 2024/11/25 14:06:43 by vshkonda      ########   odam.nl         */
-// /*                                                                            */
-// /* ************************************************************************** */
+//
+	/* ************************************************************************** */
+//
+	/*                                                                            */
+//
+	/*                                                        ::::::::            */
+//
+	/*   main.c                                             :+:    :+:            */
+// /*                                                    
+	+:+                    */
+// /*   By: vshkonda <vshkonda@student.codam.nl>        
+	+#+                     */
+// /*                                                  
+	+#+                      */
+//
+	/*   Created: 2024/11/25 13:46:29 by vshkonda      #+#    #+#                 */
+//
+	/*   Updated: 2024/11/25 14:06:43 by vshkonda      ########   odam.nl         */
+//
+	/*                                                                            */
+//
+	/* ************************************************************************** */
 
 #include "cub3d.h"
 
-void free_game(t_game *game)
+void	free_game(t_game *game)
 {
 	mlx_delete_texture(game->ray->walls->north);
 	mlx_delete_texture(game->ray->walls->south);
@@ -25,9 +36,9 @@ void free_game(t_game *game)
 	free(game);
 }
 
-void free_mfd(t_map_file_data *mfd)
+void	free_mfd(t_map_file_data *mfd)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < mfd->height)
@@ -45,7 +56,7 @@ void free_mfd(t_map_file_data *mfd)
 	free(mfd);
 }
 
-void free_player(t_player *player)
+void	free_player(t_player *player)
 {
 	free(player);
 }
@@ -60,27 +71,27 @@ void	game_loop(void *param)
 	raycast_and_render(game);
 }
 
-
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
+	t_game	*game;
 
-    if (argc != 2)
-    {
-        printf("Usage: ./cub3d <map.cub>\n");
-        return EXIT_FAILURE;
-    }
-	t_game* game = (t_game *)malloc(sizeof(t_game));
-    init_game(game, argv[1]);
-
-    if (!validate_map(game->mfd, game->player))
-        handle_error("Invalid map");
+	if (argc != 2)
+	{
+		printf("Usage: ./cub3d <map.cub>\n");
+		return (EXIT_FAILURE);
+	}
+	game = (t_game *)malloc(sizeof(t_game));
+	init_game(game, argv[1]);
+	if (!validate_map(game->mfd, game->player))
+	{
+		handle_error("Invalid map");
+	}
 	init_ray_struct(game->ray, game->mfd);
 	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
 	// stretch image based on window size changing
 	mlx_loop_hook(game->mlx, game_loop, game);
 	mlx_loop(game->mlx);
 	mlx_terminate(game->mlx);
-    free_game(game);
-    return EXIT_SUCCESS;
+	free_game(game);
+	return (EXIT_SUCCESS);
 }
-
