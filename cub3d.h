@@ -6,7 +6,7 @@
 /*   By: vovashko <vovashko@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:33:40 by vovashko      #+#    #+#                 */
-/*   Updated: 2025/01/09 14:40:23 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/13 13:20:21 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,5 +181,6 @@ void				convert_floor_and_ceiling_colors(t_game *game);
 void				update_player_start_dir(t_player *player);
 void				update_plane_start_dir(t_player *player);
 void				assign_starting_dist(t_ray *ray, t_player *player);
+void	init_ray_struct(t_ray *ray, t_map_file_data *mfd);
 
 #endif

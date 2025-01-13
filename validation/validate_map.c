@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:42:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/02 12:49:42 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/13 14:09:53 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char **row_on_top, char **row_on_bottom)
 {
 	*row_on_top = NULL;
 	*row_on_bottom = NULL;
-	if (i > 0)
+	if (*i > 0)
 		*row_on_top = map[*i - 1];
 	if (map[*i + 1])
 		*row_on_bottom = map[*i + 1];
