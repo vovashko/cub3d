@@ -29,10 +29,13 @@ git submodule init
 git submodule update
 ```
 
-To compile the project, ensure you have **GLFW** installed, then run:
+If you haven't used MLX42 library before please refer to its installment process [here](https://github.com/codam-coding-college/MLX42/tree/7f95e70415705dcc723f94a2696aba84ed3756ad) first. 
+Run:
 ```bash
 make
 ```
+to compile the project.
+
 This will generate the `cub3D` executable.
 
 ## Usage
