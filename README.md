@@ -45,6 +45,12 @@ Run the program with a valid map file:
 ./cub3D maps/good/*.cub
 ```
 
+In case you want to see the magic of error handling in this project, feel free to execute:
+```bash
+./map_tester.sh
+```
+
+
 ## Map Format
 
 The map should be a `.cub` file with the following format:
