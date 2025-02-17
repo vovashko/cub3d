@@ -76,12 +76,6 @@ C 255,255,255
 - **← / →** - Rotate view left / right
 - **ESC** - Quit the game
 
-## Dependencies
-
-- **MLX42**
-- **GNU Make**
-- **cc** (C compiler)
-
 ## Project Details
 
 ### File Validation
