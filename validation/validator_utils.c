@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:47:52 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/02 10:52:12 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/16 11:07:30 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool	ft_isspace(char c)
 {
-	if (c == ' ' || c == '\t' || c == '\n' || \
-	c == '\v' || c == '\f' || c == '\r')
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r')
 		return (true);
 	return (false);
 }
@@ -64,4 +64,25 @@ void	free_map(char **map, int rows)
 		i++;
 	}
 	free(map);
+}
+
+void	check_map_chars(char **map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] != '1' && map[i][j] != '0' && map[i][j] != 'N'
+				&& map[i][j] != 'S' && map[i][j] != 'W' && map[i][j] != 'E'
+				&& map[i][j] != ' ' && map[i][j] != '\n')
+				handle_error("Invalid character in map");
+			j++;
+		}
+		i++;
+	}
 }

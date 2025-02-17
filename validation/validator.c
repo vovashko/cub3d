@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:55:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/13 14:41:26 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/15 16:50:53 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ bool	validate_map(t_map_file_data *mfd, t_player *player)
 		return (false);
 	if (!validate_map_enclosure(mfd->map))
 		return (false);
+	check_map_chars(mfd->map);
 	if (!validate_player_presence(mfd->map, player))
 		return (false);
 	return (true);

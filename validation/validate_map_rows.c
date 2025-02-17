@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:32:25 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/02 10:41:45 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/15 12:22:21 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ bool	is_row_enclosed(char *row)
 		curr_len--;
 	if (row[0] != '1' || row[curr_len - 1] != '1')
 	{
-		handle_error("Error");
+		handle_error("Row not properly enclosed");
 		return (false);
 	}
 	return (true);
@@ -45,7 +45,7 @@ bool	validate_edge_gaps(char *curr_row, char *adjacent_row)
 			adjacent_row[j] != ' ' && curr_len <= adjacent_len) || \
 			ft_strchr("SWEN0", curr_row[j]))
 		{
-			handle_error("Error");
+			handle_error("Gap in the map found");
 			return (false);
 		}
 		j++;

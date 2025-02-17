@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/25 13:46:21 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/13 13:21:57 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/16 12:16:28 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,6 @@
 void	init_player(t_game *game)
 {
 	game->player = (t_player *)malloc(sizeof(t_player));
-	game->player->player_img = mlx_new_image(game->mlx, 1, 1);
-	if (game->player->player_img == NULL)
-	{
-		printf("Error\nFailed to create player image\n");
-		exit(1);
-	}
-	if (mlx_image_to_window(game->mlx, game->player->player_img, 0, 0) == -1)
-	{
-		printf("Error\nFailed to draw image\n");
-		exit(1);
-	}
-	game->player->player_img->enabled = false;
 	game->player->x = -1;
 	game->player->y = -1;
 	game->player->plane_x = 0;
@@ -86,13 +74,32 @@ void	init_game(t_game *game, char *map_file)
 	fd = open(map_file, O_RDONLY);
 	if (fd == -1)
 		handle_error("Failed to open map file");
-	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", true);
-	game->background = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	if (mlx_image_to_window(game->mlx, game->background, 0, 0) == -1)
-		handle_error("Failed to draw background");
 	init_player(game);
 	init_mfd(game, fd);
 	convert_floor_and_ceiling_colors(game);
 	ray = (t_ray *)malloc(sizeof(t_ray));
 	game->ray = ray;
+}
+
+void	init_graphics(t_game *game)
+{
+	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
+	game->background = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	if (mlx_image_to_window(game->mlx, game->background, 0, 0) == -1)
+	{
+		mlx_terminate(game->mlx);
+		handle_error("Failed to draw background");
+	}
+	game->player->player_img = mlx_new_image(game->mlx, 1, 1);
+	if (game->player->player_img == NULL)
+	{
+		mlx_terminate(game->mlx);
+		handle_error("Failed to create player image");
+	}
+	if (mlx_image_to_window(game->mlx, game->player->player_img, 0, 0) == -1)
+	{
+		mlx_terminate(game->mlx);
+		handle_error("Failed to draw image");
+	}
+	game->player->player_img->enabled = false;
 }

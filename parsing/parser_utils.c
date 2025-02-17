@@ -6,17 +6,11 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:16:23 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/09 10:07:56 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/15 12:12:54 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
-
-void	handle_error(char *error)
-{
-	fprintf(stderr, "Error: %s\n", error);
-	exit(EXIT_FAILURE);
-}
 
 char	*skip_spaces(char *line)
 {

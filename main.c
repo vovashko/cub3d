@@ -1,25 +1,14 @@
-//
-	/* ************************************************************************** */
-//
-	/*                                                                            */
-//
-	/*                                                        ::::::::            */
-//
-	/*   main.c                                             :+:    :+:            */
-// /*                                                    
-	+:+                    */
-// /*   By: vshkonda <vshkonda@student.codam.nl>        
-	+#+                     */
-// /*                                                  
-	+#+                      */
-//
-	/*   Created: 2024/11/25 13:46:29 by vshkonda      #+#    #+#                 */
-//
-	/*   Updated: 2024/11/25 14:06:43 by vshkonda      ########   odam.nl         */
-//
-	/*                                                                            */
-//
-	/* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   main.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/11/25 13:46:29 by vshkonda      #+#    #+#                 */
+/*   Updated: 2025/01/16 11:45:28 by pminialg      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3d.h"
 
@@ -75,9 +64,9 @@ int	main(int argc, char **argv)
 {
 	t_game	*game;
 
-	if (argc != 2)
+	if (argc != 2 || !check_file_format(argv[1]))
 	{
-		printf("Usage: ./cub3d <map.cub>\n");
+		printf("Error\nUsage: ./cub3D <map.cub>\n");
 		return (EXIT_FAILURE);
 	}
 	game = (t_game *)malloc(sizeof(t_game));
@@ -86,9 +75,9 @@ int	main(int argc, char **argv)
 	{
 		handle_error("Invalid map");
 	}
+	init_graphics(game);
 	init_ray_struct(game->ray, game->mfd);
 	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
-	// stretch image based on window size changing
 	mlx_loop_hook(game->mlx, game_loop, game);
 	mlx_loop(game->mlx);
 	mlx_terminate(game->mlx);

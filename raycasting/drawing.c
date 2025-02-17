@@ -6,7 +6,7 @@
 /*   By: vshkonda <vshkonda@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/06 12:46:19 by vshkonda      #+#    #+#                 */
-/*   Updated: 2025/01/08 15:35:56 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/16 12:09:51 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ void	draw_wall_slice(t_game *game, t_ray *ray,
 	double	scale;
 	double	tex_pos;
 
-	texture_x = (ray->hit_portion * current_texture->width);
+	texture_x = fmin(fmax(ray->hit_portion * current_texture->width, 0), \
+	current_texture->width - 1);
 	scale = (double)current_texture->height / ray->slice_height;
 	tex_pos = (ray->wall_start - HEIGHT / 2 + ray->slice_height / 2) * scale;
 	i = 0;

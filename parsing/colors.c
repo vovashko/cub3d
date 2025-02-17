@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:05:11 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/09 10:06:56 by pminialg      ########   odam.nl         */
+/*   Updated: 2025/01/15 12:18:46 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,7 @@ const char *component_name)
 	if (line[*index] == ',' && ft_strncmp(component_name, "blue", 5) != 0)
 		(*index)++;
 	else if (ft_strncmp(component_name, "blue", 5) != 0)
-		handle_error("Invalid color format: expected ',' \
-		after a color component");
+		handle_error("Invalid color format. Expected , as separator.");
 	return (value);
 }
 

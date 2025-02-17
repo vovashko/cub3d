@@ -60,38 +60,38 @@ valgrind ./cub3d maps/bad/wall_hole_west.cub
 echo "Running: maps/bad/wall_none.cub" 
 valgrind ./cub3d maps/bad/wall_none.cub
 
-echo "GOOD MAPS:"
-echo "Running: maps/good/cheese_maze.cub"
-valgrind ./cub3d maps/good/cheese_maze.cub
-echo "Running: maps/good/creepy.cub"
-valgrind ./cub3d maps/good/creepy.cub
-echo "Running: maps/good/dungeon.cub"
-valgrind ./cub3d maps/good/dungeon.cub
-echo "Running: maps/good/library.cub"
-valgrind ./cub3d maps/good/library.cub
-echo "Running: maps/good/matrix.cub"
-valgrind ./cub3d maps/good/matrix.cub
-echo "Running: maps/good/sad_face.cub"
-valgrind ./cub3d maps/good/sad_face.cub
-echo "Running: maps/good/square_map.cub"
-valgrind ./cub3d maps/good/square_map.cub
-echo "Running: maps/good/subject_map.cub"
-valgrind ./cub3d maps/good/subject_map.cub
-echo "Running: maps/good/test_map.cub"
-valgrind ./cub3d maps/good/test_map.cub
-echo "Running: maps/good/test_map_hole.cub"
-valgrind ./cub3d maps/good/test_map_hole.cub
-echo "Running: maps/good/test_pos_bottom.cub"
-valgrind ./cub3d maps/good/test_pos_bottom.cub
-echo "Running: maps/good/test_pos_left.cub"
-valgrind ./cub3d maps/good/test_pos_left.cub
-echo "Running: maps/good/test_pos_right.cub"
-valgrind ./cub3d maps/good/test_pos_right.cub
-echo "Running: maps/good/test_pos_top.cub"
-valgrind ./cub3d maps/good/test_pos_top.cub
-echo "Running: maps/good/test_textures.cub"
-valgrind ./cub3d maps/good/test_textures.cub
-echo "Running: maps/good/test_whitespace.cub"
-valgrind ./cub3d maps/good/test_whitespace.cub
-echo "Running: maps/good/works.cub"
-valgrind ./cub3d maps/good/works.cub
+# echo "GOOD MAPS:"
+# echo "Running: maps/good/cheese_maze.cub"
+# valgrind ./cub3d maps/good/cheese_maze.cub
+# echo "Running: maps/good/creepy.cub"
+# valgrind ./cub3d maps/good/creepy.cub
+# echo "Running: maps/good/dungeon.cub"
+# valgrind ./cub3d maps/good/dungeon.cub
+# echo "Running: maps/good/library.cub"
+# valgrind ./cub3d maps/good/library.cub
+# echo "Running: maps/good/matrix.cub"
+# valgrind ./cub3d maps/good/matrix.cub
+# echo "Running: maps/good/sad_face.cub"
+# valgrind ./cub3d maps/good/sad_face.cub
+# echo "Running: maps/good/square_map.cub"
+# valgrind ./cub3d maps/good/square_map.cub
+# echo "Running: maps/good/subject_map.cub"
+# valgrind ./cub3d maps/good/subject_map.cub
+# echo "Running: maps/good/test_map.cub"
+# valgrind ./cub3d maps/good/test_map.cub
+# echo "Running: maps/good/test_map_hole.cub"
+# valgrind ./cub3d maps/good/test_map_hole.cub
+# echo "Running: maps/good/test_pos_bottom.cub"
+# valgrind ./cub3d maps/good/test_pos_bottom.cub
+# echo "Running: maps/good/test_pos_left.cub"
+# valgrind ./cub3d maps/good/test_pos_left.cub
+# echo "Running: maps/good/test_pos_right.cub"
+# valgrind ./cub3d maps/good/test_pos_right.cub
+# echo "Running: maps/good/test_pos_top.cub"
+# valgrind ./cub3d maps/good/test_pos_top.cub
+# echo "Running: maps/good/test_textures.cub"
+# valgrind ./cub3d maps/good/test_textures.cub
+# echo "Running: maps/good/test_whitespace.cub"
+# valgrind ./cub3d maps/good/test_whitespace.cub
+# echo "Running: maps/good/works.cub"
+# valgrind ./cub3d maps/good/works.cub

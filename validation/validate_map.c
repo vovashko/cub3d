@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/02 10:42:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2025/01/13 14:09:53 by vshkonda      ########   odam.nl         */
+/*   Updated: 2025/01/15 12:17:51 by vshkonda      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static bool	process_empty_rows(char *curr_row, int *empty_row_detected)
 	}
 	if (*empty_row_detected)
 	{
-		handle_error("Map contains floating or disconnected rows.\n");
+		handle_error("Map contains floating or disconnected rows.");
 		return (false);
 	}
 	return (true);
@@ -69,7 +69,7 @@ bool	validate_map_enclosure(char **map)
 
 	empty_row_detected = 0;
 	if (!map || !map[0])
-		return (handle_error("Map is missing or empty.\n"), false);
+		return (handle_error("Map is missing or empty."), false);
 	while (map[i])
 	{
 		initialize_rows(map, &i, &row_on_top, &row_on_bottom);
